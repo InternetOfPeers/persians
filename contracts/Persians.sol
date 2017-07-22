@@ -55,14 +55,15 @@ contract Owned {
 
 contract PersianToken is TokenERC20, Owned, SafeMath {
 
-    uint8 public decimals;
-    uint256 public totalSupply;
-    uint256 public maxTotalSupply;
-    string public name;
-    string public symbol;
-    string public version;
+    // The actual total supply is not constant and it will be updated with the real redeemed tokens once the ICO is over
+    uint256 public totalSupply = 0;
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
+
+    uint8 public constant decimals = 18;
+    string public constant name = 'Persian';
+    string public constant symbol = 'PRS';
+    string public constant version = '1.0.0';
 
     function transfer(address _to, uint256 _value) returns (bool success) {
         if (balances[msg.sender] < _value) return false;
@@ -110,7 +111,11 @@ contract TokenICO is PersianToken {
     uint256 public totalContributions;
     mapping (address => uint256) public contributions;
 
+    // At max 300.000 Persian (with 18 decimals) will be ever generated from this ICO
+    uint256 public constant maxTotalSupply = 300000 * 10**18;
+
     event Contributed(address indexed _contributor, uint256 _value, uint256 _estimatedTotalTokenBalance);
+    event Claimed(address indexed _contributor, uint256 _value);
 
     function contribute() onlyDuringICO payable external returns (bool success) {
         totalContributions = safeAdd(totalContributions, msg.value);
@@ -124,7 +129,8 @@ contract TokenICO is PersianToken {
         contributions[msg.sender] = 0;
         balances[msg.sender] = balance;
         totalSupply = safeAdd(totalSupply, balance);
-        require(totalSupply <= maxTotalSupply);        
+        require(totalSupply <= maxTotalSupply);
+        Claimed(msg.sender, balance);
         return true;
     }
 
@@ -136,12 +142,14 @@ contract TokenICO is PersianToken {
         return contributions[_owner] > 0 ? safeMul( maxTotalSupply / totalContributions, contributions[_owner]) : 0;
     }
 
-    function isICOEnded() constant returns (bool _ended) {
-        return block.number > icoEndBlock;
+    // This check is an helper function for ÐApp to check the effect of the NEXT tx, NOT simply the current state of the contract
+    function isICOOpen() constant returns (bool _open) {
+        return block.number >= (icoStartBlock - 1) && !isICOEnded();
     }
 
-    function isICOOpen() constant returns (bool _open) {
-        return block.number >= icoStartBlock && block.number <= icoEndBlock;
+    // This check is an helper function for ÐApp to check the effect of the NEXT tx, NOT simply the current state of the contract
+    function isICOEnded() constant returns (bool _ended) {
+        return block.number >= icoEndBlock;
     }
 
     modifier onlyDuringICO {
@@ -157,14 +165,6 @@ contract TokenICO is PersianToken {
 contract PersianTokenICO is TokenICO {
 
     function PersianTokenICO(uint256 _icoStartBlock, uint256 _icoEndBlock) {
-        decimals = 18;
-        // At max 300.000 Persian will be generated from this ICO
-        maxTotalSupply = 300000 * 10**18;
-        // The actual total supply will be updated with the real redeemed tokens once the ICO is over
-        totalSupply = 0;
-        name = 'Persian';
-        symbol = 'PRS';
-        version = '1.0.0';
         icoStartBlock = _icoStartBlock;
         icoEndBlock = _icoEndBlock;
     }
