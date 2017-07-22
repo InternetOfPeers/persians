@@ -1,36 +1,5 @@
 pragma solidity ^0.4.13;
 
-/**
- * @title SafeMath
- * @dev Math operations with safety checks that throw on error
- */
-library SafeMath {
-  function mul(uint256 a, uint256 b) internal constant returns (uint256) {
-    uint256 c = a * b;
-    assert(a == 0 || c / a == b);
-    return c;
-  }
-
-  function div(uint256 a, uint256 b) internal constant returns (uint256) {
-    // assert(b > 0); // Solidity automatically throws when dividing by 0
-    uint256 c = a / b;
-    // assert(a == b * c + a % b); // There is no case in which this doesn't hold
-    return c;
-  }
-
-  function sub(uint256 a, uint256 b) internal constant returns (uint256) {
-    assert(b <= a);
-    return a - b;
-  }
-
-  function add(uint256 a, uint256 b) internal constant returns (uint256) {
-    uint256 c = a + b;
-    assert(c >= a);
-    return c;
-  }
-}
-
-
 interface TokenERC20 {
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
@@ -49,6 +18,30 @@ interface TokenNotifier {
     function receiveApproval(address from, uint256 _amount, address _token, bytes _data);
 }
 
+/**
+ * @title SafeMath (from https://github.com/OpenZeppelin/zeppelin-solidity/blob/4d91118dd964618863395dcca25a50ff137bf5b6/contracts/math/SafeMath.sol)
+ * @dev Math operations with safety checks that throw on error
+ */
+contract SafeMath {
+    
+    function safeMul(uint256 a, uint256 b) internal constant returns (uint256) {
+        uint256 c = a * b;
+        assert(a == 0 || c / a == b);
+        return c;
+    }
+
+    function safeSub(uint256 a, uint256 b) internal constant returns (uint256) {
+        assert(b <= a);
+        return a - b;
+    }
+
+    function safeAdd(uint256 a, uint256 b) internal constant returns (uint256) {
+        uint256 c = a + b;
+        assert(c >= a);
+        return c;
+    }
+}
+
 
 contract Owned {
 
@@ -60,12 +53,11 @@ contract Owned {
 }
 
 
-contract PersianToken is TokenERC20, Owned {
-    using SafeMath for uint256;
+contract PersianToken is TokenERC20, Owned, SafeMath {
 
     uint8 public decimals;
     uint256 public totalSupply;
-    uint256 public estimatedTotalSupply;
+    uint256 public maxTotalSupply;
     string public name;
     string public symbol;
     string public version;
@@ -74,17 +66,17 @@ contract PersianToken is TokenERC20, Owned {
 
     function transfer(address _to, uint256 _value) returns (bool success) {
         if (balances[msg.sender] < _value) return false;
-        balances[msg.sender].sub(_value);
-        balances[_to].add(_value);
+        balances[msg.sender] = safeSub(balances[msg.sender], _value);
+        balances[_to] = safeAdd(balances[_to], _value);
         Transfer(msg.sender, _to, _value);
         return true;
     }
 
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
         if(balances[msg.sender] < _value || allowed[_from][msg.sender] < _value) return false;
-        balances[_to].add(_value);
-        balances[_from].sub(_value);
-        allowed[_from][msg.sender].sub(_value);
+        balances[_to] = safeAdd(balances[_to], _value);
+        balances[_from] = safeSub(balances[_from], _value);
+        allowed[_from][msg.sender] = safeSub(allowed[_from][msg.sender], _value);
         Transfer(_from, _to, _value);
         return true;
     }
@@ -121,17 +113,18 @@ contract TokenICO is PersianToken {
     event Contributed(address indexed _contributor, uint256 _value, uint256 _estimatedTotalTokenBalance);
 
     function contribute() onlyDuringICO payable external returns (bool success) {
-        totalContributions.add(msg.value);
-        contributions[msg.sender].add(msg.value);
+        totalContributions = safeAdd(totalContributions, msg.value);
+        contributions[msg.sender] = safeAdd(contributions[msg.sender], msg.value);
         Contributed(msg.sender, msg.value, estimateBalanceOf(msg.sender));
         return true;
     }
 
     function claimToken() onlyAfterICO external returns (bool success) {
         uint256 balance = estimateBalanceOf(msg.sender);
-        balances[msg.sender] = balance;
-        totalSupply.add(balance);
         contributions[msg.sender] = 0;
+        balances[msg.sender] = balance;
+        totalSupply = safeAdd(totalSupply, balance);
+        require(totalSupply <= maxTotalSupply);        
         return true;
     }
 
@@ -140,14 +133,14 @@ contract TokenICO is PersianToken {
     }
 
     function estimateBalanceOf(address _owner) constant returns (uint256 estimatedTokens) {
-        return contributions[_owner] > 0 ? estimatedTotalSupply.div(totalContributions).mul(contributions[_owner]) : 0;
+        return contributions[_owner] > 0 ? safeMul( maxTotalSupply / totalContributions, contributions[_owner]) : 0;
     }
 
-    function isICOEnded() constant returns (bool icoEnded) {
+    function isICOEnded() constant returns (bool _ended) {
         return block.number > icoEndBlock;
     }
 
-    function isICOOpen() constant returns (bool icoOpen) {
+    function isICOOpen() constant returns (bool _open) {
         return block.number >= icoStartBlock && block.number <= icoEndBlock;
     }
 
@@ -165,9 +158,9 @@ contract PersianTokenICO is TokenICO {
 
     function PersianTokenICO(uint256 _icoStartBlock, uint256 _icoEndBlock) {
         decimals = 18;
-        // About 300.000 Persian will be generated from this ICO
-        estimatedTotalSupply = 300000 * 10**18;
-        //Total supply will be updated with the real redeemed tokens once the ICO is over
+        // At max 300.000 Persian will be generated from this ICO
+        maxTotalSupply = 300000 * 10**18;
+        // The actual total supply will be updated with the real redeemed tokens once the ICO is over
         totalSupply = 0;
         name = 'Persian';
         symbol = 'PRS';
@@ -177,8 +170,8 @@ contract PersianTokenICO is TokenICO {
     }
   
     function () onlyDuringICO payable {
-        totalContributions.add(msg.value);
-        contributions[msg.sender].add(msg.value);
+        totalContributions = safeAdd(totalContributions, msg.value);
+        contributions[msg.sender] = safeAdd(contributions[msg.sender], msg.value);
         Contributed(msg.sender, msg.value, estimateBalanceOf(msg.sender));
     }
 
