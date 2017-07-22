@@ -1,5 +1,36 @@
 pragma solidity ^0.4.13;
 
+/**
+ * @title SafeMath
+ * @dev Math operations with safety checks that throw on error
+ */
+library SafeMath {
+  function mul(uint256 a, uint256 b) internal constant returns (uint256) {
+    uint256 c = a * b;
+    assert(a == 0 || c / a == b);
+    return c;
+  }
+
+  function div(uint256 a, uint256 b) internal constant returns (uint256) {
+    // assert(b > 0); // Solidity automatically throws when dividing by 0
+    uint256 c = a / b;
+    // assert(a == b * c + a % b); // There is no case in which this doesn't hold
+    return c;
+  }
+
+  function sub(uint256 a, uint256 b) internal constant returns (uint256) {
+    assert(b <= a);
+    return a - b;
+  }
+
+  function add(uint256 a, uint256 b) internal constant returns (uint256) {
+    uint256 c = a + b;
+    assert(c >= a);
+    return c;
+  }
+}
+
+
 interface TokenERC20 {
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
@@ -18,17 +49,23 @@ interface TokenNotifier {
     function receiveApproval(address from, uint256 _amount, address _token, bytes _data);
 }
 
+
 contract Owned {
 
     address owner;
+    
     function Owned() { owner = msg.sender; }
+
     modifier onlyOwner { require(msg.sender == owner); _; }
 }
 
+
 contract PersianToken is TokenERC20, Owned {
+    using SafeMath for uint256;
 
     uint8 public decimals;
     uint256 public totalSupply;
+    uint256 public estimatedTotalSupply;
     string public name;
     string public symbol;
     string public version;
@@ -37,17 +74,17 @@ contract PersianToken is TokenERC20, Owned {
 
     function transfer(address _to, uint256 _value) returns (bool success) {
         if (balances[msg.sender] < _value) return false;
-        balances[msg.sender] -= _value;
-        balances[_to] += _value;
+        balances[msg.sender].sub(_value);
+        balances[_to].add(_value);
         Transfer(msg.sender, _to, _value);
         return true;
     }
 
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
         if(balances[msg.sender] < _value || allowed[_from][msg.sender] < _value) return false;
-        balances[_to] += _value;
-        balances[_from] -= _value;
-        allowed[_from][msg.sender] -= _value;
+        balances[_to].add(_value);
+        balances[_from].sub(_value);
+        allowed[_from][msg.sender].sub(_value);
         Transfer(_from, _to, _value);
         return true;
     }
@@ -84,14 +121,16 @@ contract TokenICO is PersianToken {
     event Contributed(address indexed _contributor, uint256 _value, uint256 _estimatedTotalTokenBalance);
 
     function contribute() onlyDuringICO payable external returns (bool success) {
-        totalContributions += msg.value;
-        contributions[msg.sender] += msg.value;
+        totalContributions.add(msg.value);
+        contributions[msg.sender].add(msg.value);
         Contributed(msg.sender, msg.value, estimateBalanceOf(msg.sender));
         return true;
     }
 
     function claimToken() onlyAfterICO external returns (bool success) {
-        balances[msg.sender] = estimateBalanceOf(msg.sender);
+        uint256 balance = estimateBalanceOf(msg.sender);
+        balances[msg.sender] = balance;
+        totalSupply.add(balance);
         contributions[msg.sender] = 0;
         return true;
     }
@@ -101,7 +140,7 @@ contract TokenICO is PersianToken {
     }
 
     function estimateBalanceOf(address _owner) constant returns (uint256 estimatedTokens) {
-        return (totalSupply / totalContributions) * contributions[_owner];
+        return contributions[_owner] > 0 ? estimatedTotalSupply.div(totalContributions).mul(contributions[_owner]) : 0;
     }
 
     function isICOEnded() constant returns (bool icoEnded) {
@@ -126,7 +165,10 @@ contract PersianTokenICO is TokenICO {
 
     function PersianTokenICO(uint256 _icoStartBlock, uint256 _icoEndBlock) {
         decimals = 18;
-        totalSupply = 300000 * 10**18;
+        // About 300.000 Persian will be generated from this ICO
+        estimatedTotalSupply = 300000 * 10**18;
+        //Total supply will be updated with the real redeemed tokens once the ICO is over
+        totalSupply = 0;
         name = 'Persian';
         symbol = 'PRS';
         version = '1.0.0';
@@ -135,8 +177,8 @@ contract PersianTokenICO is TokenICO {
     }
   
     function () onlyDuringICO payable {
-        totalContributions += msg.value;
-        contributions[msg.sender] += msg.value;
+        totalContributions.add(msg.value);
+        contributions[msg.sender].add(msg.value);
         Contributed(msg.sender, msg.value, estimateBalanceOf(msg.sender));
     }
 
