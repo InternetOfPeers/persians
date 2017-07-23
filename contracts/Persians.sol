@@ -127,7 +127,7 @@ contract TokenICO is PersianToken {
     function claimToken() onlyAfterICO external returns (bool success) {
         uint256 balance = estimateBalanceOf(msg.sender);
         contributions[msg.sender] = 0;
-        balances[msg.sender] = balance;
+        balances[msg.sender] = safeAdd(balances[msg.sender], balance);
         totalSupply = safeAdd(totalSupply, balance);
         require(totalSupply <= maxTotalSupply);
         Claimed(msg.sender, balance);
