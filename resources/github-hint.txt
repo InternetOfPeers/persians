@@ -1,3 +1,0 @@
-0xbee865e0e814737e05b1223c0abb9ce8d68a5266f0e3e164fad4563bd4e1175d	https://raw.githubusercontent.com/Neurone/persians/master/resources/persianToken.png
-0x4bc623a1b0f6ba618e29a53f0249307e242cf61b1aa1d994873ad97961618ffc	https://raw.githubusercontent.com/Neurone/persians/master/resources/persianToken_2.png
-
