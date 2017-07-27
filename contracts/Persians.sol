@@ -1,6 +1,6 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.4.11;
 
-interface TokenERC20 {
+contract TokenERC20 {
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
@@ -13,7 +13,7 @@ interface TokenERC20 {
 }
 
 
-interface TokenNotifier {
+contract TokenNotifier {
 
     function receiveApproval(address from, uint256 _amount, address _token, bytes _data);
 }

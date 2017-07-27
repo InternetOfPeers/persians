@@ -1,5 +1,7 @@
-var Persians = artifacts.require("./Persians.sol");
+var PersianTokenICO = artifacts.require("./PersianTokenICO.sol");
+var Battle = artifacts.require("./Battle.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(Persians);
+  deployer.deploy(PersianTokenICO);
+  deployer.deploy(Battle);
 };
