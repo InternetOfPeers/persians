@@ -2,7 +2,7 @@
 ## What is a Battle Smart Contract
 Battle smart contract is a platform/ecosystem for gaming which is built on top of a decentralized smart contract, allowing anyone to use a Warrior tokens: entities which exists on the Ethereum Network, which can be traded, and entered into events to do battle with other Warrior tokens holders for fun and profit!
 
-### Since now we developed two type of warriors tokens
+### Since now we developed this type of warriors tokens
 
 1. **Persians**: this Token was created in memory of the 300000 Persian Soldiers that fight against the Spartans army in [**Battle of Thermopylae**](https://en.wikipedia.org/wiki/Battle_of_Thermopylae)
 
