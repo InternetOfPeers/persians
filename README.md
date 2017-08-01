@@ -35,11 +35,11 @@ Depending on the outcome of the ICOs, and the future success of the first battle
 
 Here is a sampling of some of the ideas we have (or will) write as expansion after initial release:
 
-Additional Battle Smart Contract, with different rules
-Team based combat
-Special type of warrior tokens with special type of Battle Points (ie. one time warrior tokens, generals, legendary, etc)
-Co-Op play
-Additions to your warrior tokens
-Ability to customize the warriors deployment on the battle contract, introducing more phase in the battle contract
-Much more!
+- Additional Battle Smart Contract, with different rules
+- Team based combat
+- Special type of warrior tokens with special type of Battle Points (ie. one time warrior tokens, generals, legendary, etc)
+- Co-Op play
+- Additions to your warrior tokens
+- Ability to customize the warriors deployment on the battle contract, introducing more phase in the battle contract
+- Much more!
 
