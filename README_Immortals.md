@@ -1,4 +1,22 @@
-# IMMORTAL TOKEN ICO Instructions & Tutorial:
+# IMMORTAL TOKEN ICO Instructions & Tutorial
+## ICO Announcement
+
+https://bitcointalk.org/index.php?topic=2043872.0
+
+## Warriors Description
+
+The Persian Immortals were the special forces of the ancient world. They were trained from the age of five to do nothing but kill and destroy other soldiers.
+
+*The Immortal army was created due the creation of the Athenians army to make the battle smart contract more balanced and realistic as possible. They will support Persian Warriors on the first battle contract fighting side by side against Greek army*
+
+## Technical Specification
+
+Each Immortal warrior as a value in BP equals to BP value of one **Athenian warrior** defined in the battle contract rules. Moreover the Immortal warrior **could not died** in the battle but **will be sent back** to contributor address after the end of the battle.
+
+- Total token supply: 100 IMT
+- Decimals: 18
+- Smart Contract Address: `0x163733bcc28dbf26B41a8CfA83e369b5B3af741b`
+
 ## Contribution
 ### To Contribute from any “Full” wallet address:
 *This includes any wallet not using a smart-contract to store your balance. So far we've tested this with Geth, Solidity, and MyEtherWallet. For any other wallet type, please either verify if it's using a smart-contract to handle your transactions/balance, OR to play it sade, use the "Execute a function" instructions below, and execute the "contribute" function to participate.*
