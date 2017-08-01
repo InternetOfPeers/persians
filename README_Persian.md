@@ -1,9 +1,9 @@
 # PERSIAN TOKEN ICO Instructions & Tutorial:
 ## Contribution
-### To Contribute from any “Full” wallet address:
-*This includes any wallet not using a smart-contract to store your balance. So far we've tested this with Geth, Solidity, and MyEtherWallet. For any other wallet type, please either verify if it's using a smart-contract to handle your transactions/balance, OR to play it sade, use the "Execute a function" instructions below, and execute the "contribute" function to participate.*
+### Contribute from any “Full” wallet:
+*This includes any wallet not using a smart-contract to store your balance. We've tested smart contract functions with Geth, Solidity, and MyEtherWallet. For any other wallet type, please either verify if it's using a smart-contract to handle your transactions/balance, OR to play it sade, use the "Execute a function" instructions below, and execute the "contribute" function to participate.*
 
-**(do NOT use this method to send from a multi-sig contract, or any other contract based wallet. It will fail to work because of gas stipend limits.)**
+**(do NOT use this method to send from a multi-sig contract, or any other contract based wallet. It will fail to work because of gas limits.)**
 
 **It is important to include a minimum of 80,000 Gas with the transaction**
 1. Send Ether to the ICO contract address in the amount you would like to contribute.
@@ -11,12 +11,12 @@ ICO Contract Address: `0x163733bcc28dbf26B41a8CfA83e369b5B3af741b`
 2. Remember to include at least 80,000 gas with the transaction. Some wallets (such as Parity) should automatically detect the correct amount. But others may detect the default (such as 21,000) and if you send without increasing this, the tx will fail!
 2. You will be awarded balance based on your contribution, and can continue to send additional transactions in the future.
 3. At any time you can check your balance, using the steps below
-4. At ICO completion, you execute the “claimToken()” function on the contract, which will send your new PRS tokens to the same address you used to send in your contribution.
+4. At ICO completion, execute the “claimToken()” function on the contract, which will send your PRS tokens to the same address you used to send your contribution.
 
 *If you are using a contract, or a multi-sig wallet, or any other contract based wallet, you must instead execute the “contribute” function on the contract, sending along with it the amount of ETH you wish to contribute. Otherwise all of the above steps still apply.*
 
 ## To Execute a Function on the ICO Contract:
-**Note** *If you are executing any function which returns a value of "Tokens" it will return the "raw" number of PRS tokens, which must be divided by 1,000,000,000,000,000,000 in order to get the "Actual" number of PRS tokens.*
+**Note** *If you are executing any function which returns a value of "Tokens" it will return the "raw" number of PRS tokens, which must be divided by 1,000,000,000,000,000,000 in order to get the "Actual" number of PRS tokens. (PRS tokens have 18 decimal)*
 eg: `197,321,000,000,000,000,000,000 = 197.321 PRS`
 ### For Parity Users:
 1. Access the Parity Web UI
@@ -24,8 +24,7 @@ eg: `197,321,000,000,000,000,000,000 = 197.321 PRS`
 3. Go to the Contracts Tab
 4. Click the +Watch Button
 5. Choose “Custom Contract” and click Next
-6. Paste the following address into the “network address” field:
-`0x163733bcc28dbf26B41a8CfA83e369b5B3af741b`
+6. Paste the following address into the “network address” field: `0x163733bcc28dbf26B41a8CfA83e369b5B3af741b`
 7. Type in “PersianTokenICO” In the “contract name” field
 8. Type a description such as "Persian Token ICO Contract" in the description field
 9. Paste the ABI code from the section below into the ABI field. (note you can select it easily in chrome by tripleclicking in the text field with the ABI below)
@@ -39,9 +38,9 @@ eg: `197,321,000,000,000,000,000,000 = 197.321 PRS`
 1. Access your myEtherWallet account (note if you don't have a wallet, follow this tutorial to create a wallet: https://myetherwallet.groovehq.com/knowledge_base/topics/how-do-i-create-a-new-wallet )
 2. Once you have accessed your wallet, you can navigate to the "Contracts" tab
 3. Insert`0x163733bcc28dbf26B41a8CfA83e369b5B3af741b` in "Contract Address"
-4. Insert the Contract ABI inside "ABI / JSON Interface"
-5. Click the "Access" button. This will then pop up below a "Read/Write Contract" section, with a "Select a Function" dropdown.
-6. You can now select the function you wish to access using the dropdown, and it will either show you the value of the query (for example if you check isICOOpen, it will return "True" or "False") or it will present you with a "Write" button.
+4. Paste the ABI code from the section below into the "ABI / JSON Interface"
+5. Click the "Access" button. This will open the "Read/Write Contract" section below, with a "Select a Function" dropdown.
+6. You can now select the function you wish to execute using the dropdown, and it will either show you the value of the query (for example if you check isICOOpen, it will return "True" or "False") or it will present you with a "Write" button.
 7. Click the "Write" button, and it will prompt you any variables to provide, and an amount of ether to send. So for example if you are calling "Contribute" you can send in Ether this way to contribute to the ICO. 
 8. If you wish to check the balance of a contributor, choose balanceOf function, and provide the address you want to check.
 
