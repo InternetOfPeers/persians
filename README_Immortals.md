@@ -17,6 +17,8 @@ Each Immortal warrior as a value in BP equals to BP value of one **Athenian warr
 - Decimals: 18
 - Smart Contract Address: `0x163733bcc28dbf26B41a8CfA83e369b5B3af741b`
 
+*The total supply of Immortals will be foreover 100, despite the Athenians warrior token that has up to 750 unity. On the battle contract no more of 100 Athenian warrior will be accepted*
+
 ## Contribution
 ### To Contribute from any “Full” wallet address:
 *This includes any wallet not using a smart-contract to store your balance. So far we've tested this with Geth, Solidity, and MyEtherWallet. For any other wallet type, please either verify if it's using a smart-contract to handle your transactions/balance, OR to play it sade, use the "Execute a function" instructions below, and execute the "contribute" function to participate.*
