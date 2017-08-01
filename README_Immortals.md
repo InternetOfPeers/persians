@@ -1,6 +1,8 @@
 # IMMORTAL TOKEN ICO Instructions & Tutorial
 ## ICO Announcement
 
+**The ICO is open, the supply of Immortal warriors is only 100**
+
 https://bitcointalk.org/index.php?topic=2043872.0
 
 ## Warriors Description
