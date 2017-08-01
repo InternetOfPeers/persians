@@ -18,6 +18,7 @@ Each Immortal warrior as a value in BP equals to BP value of one **Athenian warr
 - Total token supply: 100 IMT
 - Decimals: 18
 - Smart Contract Address: `0x163733bcc28dbf26B41a8CfA83e369b5B3af741b`
+- Etherscan Link: https://etherscan.io/address/0x163733bcc28dbf26b41a8cfa83e369b5b3af741b
 
 *The total supply of Immortals will be foreover 100, despite the Athenians warrior token that has up to 750 unity. On the battle contract no more of 100 Athenian warrior will be accepted*
 
