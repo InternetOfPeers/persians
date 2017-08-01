@@ -1,5 +1,23 @@
-# PERSIAN TOKEN ICO Instructions & Tutorial:
-## Contribution
+# PERSIAN TOKEN ICO Instructions & Tutorial
+## ICO Announcement
+
+**The ICO is now over thanks for your support.  Coming soon Persian tokens on the exchange**
+
+https://bitcointalk.org/index.php?topic=2043872.0
+
+## Warriors Description
+
+The Persian army engaged in the [**Battle of Thermopylae**](https://en.wikipedia.org/wiki/Battle_of_Thermopylae#Persian_army) was one of the most feared armies of the ancient world. Through the might of the Persian warrios, **King Xerxes I** begin his [**Second Persian invasion of Greece**](https://en.wikipedia.org/wiki/Second_Persian_invasion_of_Greece). For centuries they were considered to be almost invincible on the battlefield, defeating any kind of fierce enemies.
+
+*The Persian army was created to be deployed on the first battle smart contract, they will engaged 300 Spartan Warriors*
+
+## Technical Specification
+
+1000 Persian warrior as a value of 1 BP as defined in the battle contract rules.
+
+- Total token supply: 300000 PRS
+- Decimals: 18
+- Smart Contract Address: `0x163733bcc28dbf26B41a8CfA83e369b5B3af741b`
 ### Contribute from any “Full” wallet:
 *This includes any wallet not using a smart-contract to store your balance. We've tested smart contract functions with Geth, Solidity, and MyEtherWallet. For any other wallet type, please either verify if it's using a smart-contract to handle your transactions/balance, OR to play it sade, use the "Execute a function" instructions below, and execute the "contribute" function to participate.*
 
