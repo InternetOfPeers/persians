@@ -74,13 +74,21 @@ contract('Immortals', function (accounts) {
         });
     });
 
-    it('throw if token to be assigned are more then available', function () {
+    it('should assign maximum token available', function () {
         return Immortals.new().then(function (instance) {
-            instance.sendTransaction({ from: accounts[2], value: web3.toWei(49.9, 'ether') });
-            instance.sendTransaction({ from: accounts[2], value: web3.toWei(1.76, 'ether') })
-                .then(assert.fail)
-                .catch(function (error) {
-                    assert(error.message.indexOf('invalid opcode') >= 0, 'it should have thrown an exception because there are not enough tokens to assign');
+            var owner = accounts[0];
+            var sender = accounts[1];
+            var previousSenderBalance = web3.eth.getBalance(sender);
+            instance.sendTransaction({ from: owner, value: web3.toWei(49.9, 'ether') });
+            instance.sendTransaction({ from: sender, value: web3.toWei(1.76, 'ether') })
+                .then(function (result) {
+                    instance.balanceOf.call(sender).then(function (balance) {
+                        assert.equal(balance.valueOf(), 1, 'it should have gained only the last immortal');
+                        var newSenderBalance = web3.eth.getBalance(sender);
+                        var amount = web3.toWei(0.5, 'ether');
+                        var fee = web3.eth.getTransaction(result.tx).gasPrice.valueOf() * result.receipt.gasUsed.valueOf();
+                        assert.equal(previousSenderBalance.minus(fee).minus(amount).toNumber(), newSenderBalance.toNumber(), 'sender should have 1.26 ether sent back');
+                    });
                 });
         });
     });
