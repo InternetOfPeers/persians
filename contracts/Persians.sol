@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.13;
 
 contract TokenERC20 {
 
@@ -63,7 +63,7 @@ contract PersianToken is TokenERC20, Owned, SafeMath {
     uint8 public constant decimals = 18;
     string public constant name = 'Persian';
     string public constant symbol = 'PRS';
-    string public constant version = '1.0.0';
+    string public constant version = '1.0.1';
 
     function transfer(address _to, uint256 _value) returns (bool success) {
         if (balances[msg.sender] < _value) return false;
@@ -74,7 +74,7 @@ contract PersianToken is TokenERC20, Owned, SafeMath {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
-        if(balances[msg.sender] < _value || allowed[_from][msg.sender] < _value) return false;
+        if(balances[_from] < _value || allowed[_from][msg.sender] < _value) return false;
         balances[_to] = safeAdd(balances[_to], _value);
         balances[_from] = safeSub(balances[_from], _value);
         allowed[_from][msg.sender] = safeSub(allowed[_from][msg.sender], _value);

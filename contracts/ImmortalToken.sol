@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.13;
 
 import "./Owned.sol";
 import "./SafeMath.sol";
@@ -14,7 +14,7 @@ contract ImmortalToken is Owned, SafeMath, TokenERC20 {
     uint8 public constant totalSupply = 100;
     string public constant name = 'Immortal';
     string public constant symbol = 'IMT';
-    string public constant version = '1.0.0';
+    string public constant version = '1.0.1';
 
     function transfer(address _to, uint256 _value) returns (bool success) {
         if (balances[msg.sender] < _value) return false;
@@ -27,7 +27,7 @@ contract ImmortalToken is Owned, SafeMath, TokenERC20 {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
-        if(balances[msg.sender] < _value || allowed[_from][msg.sender] < _value) return false;
+        if(balances[_from] < _value || allowed[_from][msg.sender] < _value) return false;
         balances[_from] = safeSub(balances[_from], _value);
         assert(balances[_from] >= 0);
         allowed[_from][msg.sender] = safeSub(allowed[_from][msg.sender], _value);
