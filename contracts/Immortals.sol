@@ -14,7 +14,7 @@ contract Immortals is ImmortalToken {
 		uint256 immortals = msg.value / 0.5 ether;
 		uint256 remainder = 0;
 		//Find the remainder
-		if( safeAdd(tokenAssigned, immortals) > totalSupply ) {
+		if (safeAdd(tokenAssigned, immortals) > totalSupply) {
 			immortals = totalSupply - tokenAssigned;
 			remainder = msg.value - (immortals * 0.5 ether);
 		} else {

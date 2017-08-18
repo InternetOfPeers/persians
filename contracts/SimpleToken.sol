@@ -5,16 +5,22 @@ import "./SafeMath.sol";
 import "./TokenERC20.sol";
 import "./TokenNotifier.sol";
 
-contract ImmortalToken is Owned, SafeMath, TokenERC20 {
+contract SimpleToken is Owned, SafeMath, TokenERC20 {
 
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
     
-    uint8 public constant decimals = 0;
-    uint8 public constant totalSupply = 100;
-    string public constant name = "Immortal";
-    string public constant symbol = "IMT";
-    string public constant version = "1.0.1";
+    uint8 public decimals;
+    uint256 public totalSupply;
+    string public name;
+    string public symbol;
+
+    function SimpleToken(string _name, string _symbol, uint256 _totalSupply, uint8 _decimals) {
+        name = _name;
+        symbol = _symbol;
+        totalSupply = _totalSupply;
+        decimals = _decimals;
+    }
 
     function transfer(address _to, uint256 _value) returns (bool success) {
         if (balances[msg.sender] < _value) {
@@ -36,7 +42,7 @@ contract ImmortalToken is Owned, SafeMath, TokenERC20 {
         assert(balances[_from] >= 0);
         allowed[_from][msg.sender] = safeSub(allowed[_from][msg.sender], _value);
         balances[_to] = safeAdd(balances[_to], _value);
-        assert(balances[_to] <= totalSupply);
+        assert(balances[_to] <= totalSupply);        
         Transfer(_from, _to, _value);
         return true;
     }

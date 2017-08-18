@@ -7,19 +7,27 @@ import "./SafeMathLib.sol";
 contract Battle is Timed {
     using SafeMathLib for uint256;
 
-    uint256  constant public maxPersians         = 300000 * 10**18;  // 300.000
+    uint256 constant public maxPersians         = 300000 * 10**18;  // 300.000
     uint256 public constant maxSpartans         = 300 * 10**18;     // 300
     uint256 public constant maxImmortals        = 100;              // 100
     uint256 public constant maxAthenians        = 100 * 10*18;      // 100
 
     uint8   public constant battlePointDecimals = 18;
 
-    string  public constant version             = '1.0.0';
+    string  public constant version             = "1.0.0";
 
-    address public constant persians            = 0xF63D4Ec615898163CdE5EBC2Aa8d5768ccC92965;   //0xaec98a708810414878c3bcdf46aad31ded4a4557 MainNet
-    address public constant immortals           = 0xED19698C0abdE8635413aE7AD7224DF6ee30bF22;   //0xED19698C0abdE8635413aE7AD7224DF6ee30bF22 MainNet
-    address public constant spartans            = 0x94F72fa9d9e035a40F22f6e7ceDb78E697fF54C2;   //0x163733bcc28dbf26B41a8CfA83e369b5B3af741b MainNet
-    address public constant athenians           = 0x17052d51E954592C1046320c2371AbaB6C73Ef10;   //0x17052d51e954592c1046320c2371abab6c73ef10 MainNet
+    /* Kovan */
+    address public constant persians            = 0xa7c6D45151b24441775fC56DAB6698c016034171;
+    address public constant immortals           = 0xF70c095eaB88b682023eB56f78405Ec8Dd254236;
+    address public constant spartans            = 0x90D45dE7ff80E39AcBD81dd3Ac712BeEfe3F860f;
+    address public constant athenians           = 0xA80C1086996203827Bafbb08e905C9B009Afc745;
+
+    /* Main Net 
+    address public constant persians            = 0xaec98a708810414878c3bcdf46aad31ded4a4557;
+    address public constant immortals           = 0xED19698C0abdE8635413aE7AD7224DF6ee30bF22;
+    address public constant spartans            = 0x163733bcc28dbf26B41a8CfA83e369b5B3af741b;
+    address public constant athenians           = 0x17052d51e954592c1046320c2371abab6c73ef10;
+    */
 
     mapping (address => mapping (address => uint256))   public  warriors;                       // Troops currently allocated by each player
     mapping (address => uint256)                        public  warriorsOnTheBattlefield;       // Total troops fighting in the battle
@@ -146,13 +154,23 @@ contract Battle is Timed {
     }
     
     function getWinningFaction() constant returns (string _winningFaction) {
-        if (!isTimePassed()) return "The battle is still in progress";
-        if (isDraw()) return "The battle ended in a draw!";
+        if (!isTimePassed()) {
+            return "The battle is still in progress";
+        }
+        if (isDraw()) {
+            return "The battle ended in a draw!";
+        }
         return getPersiansBattlePoints() > getGreeksBattlePoints() ? "Persians" : "Greeks";
     }
 
     /**** DEV FUNCTIONS ******/
 
+    function setTime(uint256 _startTime, uint256 life, uint8 _avarageBlockTime) {
+        startTime = _startTime;
+        endTime = _startTime + life;
+        avarageBlockTime = _avarageBlockTime;
+    }
+    
     function setPersiansWin() {
         warriorsOnTheBattlefield[persians] = 3000 * 10**18;  //3000
         warriorsOnTheBattlefield[immortals] = 2; //200
@@ -173,5 +191,4 @@ contract Battle is Timed {
         warriorsOnTheBattlefield[spartans] = 2 * 10**18; //2000
         warriorsOnTheBattlefield[athenians] = 4 * 10**18; //400
     }
-
 }
