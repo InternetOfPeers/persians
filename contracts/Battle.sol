@@ -1,4 +1,4 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.4.15;
 
 import "./TokenERC20.sol";
 import "./Timed.sol";
@@ -17,10 +17,10 @@ contract Battle is Timed {
     string  public constant version             = "1.0.0";
 
     /* Kovan */
-    address public constant persians            = 0xa7c6D45151b24441775fC56DAB6698c016034171;
-    address public constant immortals           = 0xF70c095eaB88b682023eB56f78405Ec8Dd254236;
-    address public constant spartans            = 0x90D45dE7ff80E39AcBD81dd3Ac712BeEfe3F860f;
-    address public constant athenians           = 0xA80C1086996203827Bafbb08e905C9B009Afc745;
+    address public constant persians            = 0x0E50dF670357bCF1ea68590e260e20Ce773cde4d;
+    address public constant immortals           = 0x7dF89eC434b865d43e0BF3C0C671ea53578E3097;
+    address public constant spartans            = 0x9d5D4D2B6AA05E04f33f8Fa17D31725ceF3484F0;
+    address public constant athenians           = 0x3e22Ca55D933F65B0069C164517C4BcC5dBEaAA0;
 
     /* Main Net 
     address public constant persians            = 0xaec98a708810414878c3bcdf46aad31ded4a4557;

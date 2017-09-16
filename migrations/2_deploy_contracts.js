@@ -6,6 +6,11 @@ var TestLib = artifacts.require("./TestLib.sol");
 module.exports = function(deployer) {
   deployer.deploy(PersianTokenICO, 1, 2);
   deployer.deploy(Immortals);
-  deployer.deploy(Battle, 0, 0, 0);  
+  
+  var startBattle = 1505517534;
+  var endBattle = startBattle + (60 * 60 * 24);
+  var avarageBlockTime = 24;
+  deployer.deploy(Battle, startBattle, endBattle, avarageBlockTime);
+
   deployer.deploy(TestLib);
 };
