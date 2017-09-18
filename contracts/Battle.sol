@@ -7,27 +7,25 @@ import "./SafeMathLib.sol";
 contract Battle is Timed {
     using SafeMathLib for uint256;
 
-    uint256 constant public maxPersians         = 300000 * 10**18;  // 300.000
-    uint256 public constant maxSpartans         = 300 * 10**18;     // 300
-    uint256 public constant maxImmortals        = 100;              // 100
-    uint256 public constant maxAthenians        = 100 * 10*18;      // 100
+    string  public constant VERSION               = "1.0.0";
+    
+    uint256 public constant MAX_PERSIANS          = 300000 * 10**18;  // 300.000
+    uint256 public constant MAX_SPARTANS          = 300 * 10**18;     // 300
+    uint256 public constant MAX_IMMORTALS         = 100;              // 100
+    uint256 public constant MAX_ATHENIANS         = 100 * 10**18;     // 100
 
-    uint8   public constant battlePointDecimals = 18;
+    uint8   public constant BATTLE_POINT_DECIMALS = 18;
 
-    string  public constant version             = "1.0.0";
-
-    /* Kovan */
-    address public constant persians            = 0x0E50dF670357bCF1ea68590e260e20Ce773cde4d;
-    address public constant immortals           = 0x7dF89eC434b865d43e0BF3C0C671ea53578E3097;
-    address public constant spartans            = 0x9d5D4D2B6AA05E04f33f8Fa17D31725ceF3484F0;
-    address public constant athenians           = 0x3e22Ca55D933F65B0069C164517C4BcC5dBEaAA0;
-
-    /* Main Net 
-    address public constant persians            = 0xaec98a708810414878c3bcdf46aad31ded4a4557;
-    address public constant immortals           = 0xED19698C0abdE8635413aE7AD7224DF6ee30bF22;
-    address public constant spartans            = 0x163733bcc28dbf26B41a8CfA83e369b5B3af741b;
-    address public constant athenians           = 0x17052d51e954592c1046320c2371abab6c73ef10;
-    */
+    // MAIN NET
+    // persians            = 0xaec98a708810414878c3bcdf46aad31ded4a4557;
+    // immortals           = 0xED19698C0abdE8635413aE7AD7224DF6ee30bF22;
+    // spartans            = 0x163733bcc28dbf26B41a8CfA83e369b5B3af741b;
+    // athenians           = 0x17052d51e954592c1046320c2371abab6c73ef10;
+    
+    address public persians;
+    address public immortals;
+    address public spartans;
+    address public athenians;
 
     mapping (address => mapping (address => uint256))   public  warriors;                       // Troops currently allocated by each player
     mapping (address => uint256)                        public  warriorsOnTheBattlefield;       // Total troops fighting in the battle
@@ -52,53 +50,65 @@ contract Battle is Timed {
     
     Only Persians and Spartans can be slaves. Immortals and Athenians WILL NOT be sent back as slaves to winners.
     *******************************************************************************************/
-    function Battle(uint256 _startTime, uint256 _life, uint8 _avarageBlockTime) Timed(_startTime, _life, _avarageBlockTime) { }
+    function Battle(uint256 _startTime, uint256 _life, uint8 _avarageBlockTime, address _persians, address _immortals, address _spartans, address _athenians) Timed(_startTime, _life, _avarageBlockTime) {
+        persians = _persians;
+        immortals = _immortals;
+        spartans = _spartans;
+        athenians = _athenians;
+    }
 
     /**** PHASE #1 ******/
 
-    function assignPersiansToBattle(uint256 _warriors) onlyIfInTime external {
-        assignWarriorsToBattle(msg.sender, persians, _warriors, maxPersians);
+    function assignPersiansToBattle(uint256 _warriors) onlyIfInTime external returns (bool success) {
+        assignWarriorsToBattle(msg.sender, persians, _warriors, MAX_PERSIANS);
         // Persians are divisible with 18 decimals and their value is 1 BP
         WarriorsAssignedToBattlefield(msg.sender, persians, _warriors / 10**18);
+        return true;
     }
 
-    function assignSpartansToBattle(uint256 _warriors) onlyIfInTime external {
-        assignWarriorsToBattle(msg.sender, spartans, _warriors, maxSpartans);
+    function assignSpartansToBattle(uint256 _warriors) onlyIfInTime external returns (bool success) {
+        assignWarriorsToBattle(msg.sender, spartans, _warriors, MAX_SPARTANS);
         // Spartans are divisible with 18 decimals and their value is 1.000 BP
         WarriorsAssignedToBattlefield(msg.sender, spartans, (_warriors / 10**18) * 1000);
+        return true;
     }
 
-    function assignImmortalsToBattle(uint256 _warriors) onlyIfInTime external {
-        assignWarriorsToBattle(msg.sender, immortals, _warriors, maxImmortals);
+    function assignImmortalsToBattle(uint256 _warriors) onlyIfInTime external returns (bool success) {
+        assignWarriorsToBattle(msg.sender, immortals, _warriors, MAX_IMMORTALS);
         // Immortals are not divisible and their value is 100 BP
         WarriorsAssignedToBattlefield(msg.sender, immortals, _warriors * 100);
+        return true;
     }
 
-    function assignAtheniansToBattle(uint256 _warriors) onlyIfInTime external {
-        assignWarriorsToBattle(msg.sender, athenians, _warriors, maxAthenians);
+    function assignAtheniansToBattle(uint256 _warriors) onlyIfInTime external returns (bool success) {
+        assignWarriorsToBattle(msg.sender, athenians, _warriors, MAX_ATHENIANS);
         // Athenians are divisible with 18 decimals and their value is 100 BP
         WarriorsAssignedToBattlefield(msg.sender, athenians, (_warriors / 10**18) * 100);
+        return true;
     }
 
     /**** PHASE #2 ******/
 
-    function victoryIsOurs() onlyIfTimePassed {
+    function victoryIsOurs() onlyIfTimePassed external returns (bool success) {
         // Persians win
         if (getPersiansBattlePoints() > getGreeksBattlePoints()) retrieveWarriorsAndSlaves(persians, spartans);
         // Spartans win
         else if (getPersiansBattlePoints() < getGreeksBattlePoints()) retrieveWarriorsAndSlaves(spartans, persians);
         // It's a draw
         else retireveWarriors(msg.sender, persians, 10);
+        return true;
     }
 
     // When the battle is over, Immortals can be sent back to the former owner
-    function retrieveImmortals() onlyIfTimePassed {
+    function retrieveImmortals() onlyIfTimePassed external returns (bool success) {
         retireveWarriors(msg.sender, immortals, 0);
+        return true;
     }
 
     // When the battle is over, Athenians can be sent back to the former owner
-    function retrieveAthenians() onlyIfTimePassed {
+    function retrieveAthenians() onlyIfTimePassed external returns (bool success) {
         retireveWarriors(msg.sender, athenians, 0);
+        return true;
     }
 
     /*** PRIVATE FUNCTIONS ***/

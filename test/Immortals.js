@@ -41,14 +41,15 @@ contract('Immortals', function (accounts) {
                 assert.equal(balance.valueOf(), 2, 'it should have gained 2 immortal');
             });
 
-            instance.sendTransaction({ from: accounts[4], value: web3.toWei(1.2, 'ether') });
-            instance.balanceOf.call(accounts[4]).then(function (balance) {
-                assert.equal(balance.valueOf(), 2, 'it should have gained 2 immortal');
-            });
-
-            instance.sendTransaction({ from: accounts[4], value: web3.toWei(1.2, 'ether') });
-            instance.balanceOf.call(accounts[4]).then(function (balance) {
-                assert.equal(balance.valueOf(), 4, 'it should have gained a grand total of 4 immortal');
+            instance.sendTransaction({ from: accounts[4], value: web3.toWei(1.2, 'ether') }).then(function() {
+                instance.balanceOf.call(accounts[4]).then(function (balance) {
+                    assert.equal(balance.valueOf(), 2, 'it should have gained 2 immortal');
+                });
+                instance.sendTransaction({ from: accounts[4], value: web3.toWei(1.2, 'ether') }).then(function() {
+                    instance.balanceOf.call(accounts[4]).then(function (balance) {
+                        assert.equal(balance.valueOf(), 4, 'it should have gained a grand total of 4 immortal');
+                    });
+                });
             });
         });
     });

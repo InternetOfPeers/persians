@@ -1,34 +1,38 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.4.15;
 
 import "./Owned.sol";
-import "./SafeMath.sol";
-import "./TokenERC20.sol";
+import "./TokenEIP20.sol";
 import "./TokenNotifier.sol";
+import "./SafeMathLib.sol";
 
-contract SimpleToken is Owned, SafeMath, TokenERC20 {
-
+contract SimpleToken is Owned, TokenEIP20 {
+    using SafeMathLib for uint256;
+    
     mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
     
-    uint8 public decimals;
-    uint256 public totalSupply;
     string public name;
     string public symbol;
 
-    function SimpleToken(string _name, string _symbol, uint256 _totalSupply, uint8 _decimals) {
+    uint8 public decimals;
+    
+    uint256 public totalSupply;
+
+    function SimpleToken(string _name, string _symbol, uint8 _decimals, uint256 _totalSupply) {
         name = _name;
         symbol = _symbol;
-        totalSupply = _totalSupply;
         decimals = _decimals;
+        totalSupply = _totalSupply;
+        balances[owner] = _totalSupply;        
     }
 
     function transfer(address _to, uint256 _value) returns (bool success) {
         if (balances[msg.sender] < _value) {
             return false;
         }
-        balances[msg.sender] = safeSub(balances[msg.sender], _value);
+        balances[msg.sender] = balances[msg.sender].sub(_value);
         assert(balances[msg.sender] >= 0);
-        balances[_to] = safeAdd(balances[_to], _value);
+        balances[_to] = balances[_to].add(_value);
         assert(balances[_to] <= totalSupply);
         Transfer(msg.sender, _to, _value);
         return true;
@@ -38,10 +42,10 @@ contract SimpleToken is Owned, SafeMath, TokenERC20 {
         if (balances[_from] < _value || allowed[_from][msg.sender] < _value) {
             return false;
         }
-        balances[_from] = safeSub(balances[_from], _value);
+        balances[_from] = balances[_from].sub(_value);
         assert(balances[_from] >= 0);
-        allowed[_from][msg.sender] = safeSub(allowed[_from][msg.sender], _value);
-        balances[_to] = safeAdd(balances[_to], _value);
+        allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
+        balances[_to] = balances[_to].add(_value);
         assert(balances[_to] <= totalSupply);        
         Transfer(_from, _to, _value);
         return true;
