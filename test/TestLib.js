@@ -1,11 +1,13 @@
+'use strict'
+
 var TestLib = artifacts.require('./TestLib.sol');
 
 contract('TestLib', function (accounts) {
 
-    it('Test library', function () {
-        TestLib.deployed().then(function (instance) {
-            assert(instance.a == 4);
-        });
+    it('Test library', async function () {
+        let instance = await TestLib.deployed();
+        let value = await instance.getReadme.call();
+        assert.equal(value, 4, "not equal");
     });
 
 });
