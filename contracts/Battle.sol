@@ -15,12 +15,6 @@ contract Battle is Timed {
     uint256 public constant MAX_ATHENIANS         = 100 * 10**18;     // 100
 
     uint8   public constant BATTLE_POINT_DECIMALS = 18;
-
-    // MAIN NET
-    // persians            = 0xaec98a708810414878c3bcdf46aad31ded4a4557;
-    // immortals           = 0xED19698C0abdE8635413aE7AD7224DF6ee30bF22;
-    // spartans            = 0x163733bcc28dbf26B41a8CfA83e369b5B3af741b;
-    // athenians           = 0x17052d51e954592c1046320c2371abab6c73ef10;
     
     address public persians;
     address public immortals;
@@ -49,6 +43,12 @@ contract Battle is Timed {
     be retrieved without losses.
     
     Only Persians and Spartans can be slaves. Immortals and Athenians WILL NOT be sent back as slaves to winners.
+
+    Main Net Addresses
+    Persians            = 0xaEc98A708810414878c3BCDF46Aad31dEd4a4557;
+    Immortals           = 0xED19698C0abdE8635413aE7AD7224DF6ee30bF22;
+    Spartans            = 0x163733bcc28dbf26B41a8CfA83e369b5B3af741b;
+    Athenians           = 0x17052d51E954592C1046320c2371AbaB6C73Ef10;
     *******************************************************************************************/
     function Battle(uint256 _startTime, uint256 _life, uint8 _avarageBlockTime, address _persians, address _immortals, address _spartans, address _athenians) Timed(_startTime, _life, _avarageBlockTime) {
         persians = _persians;

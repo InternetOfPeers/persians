@@ -56,10 +56,11 @@ contract('Immortals', function (accounts) {
 
     it('should count token already assigned', function () {
         return Immortals.new().then(function (instance) {
-            instance.sendTransaction({ from: accounts[1], value: web3.toWei(1.26, 'ether') });
-            instance.sendTransaction({ from: accounts[1], value: web3.toWei(1.76, 'ether') });
-            instance.tokenAssigned().then(function (tokenAssigned) {
-                assert.equal(tokenAssigned.valueOf(), 5, 'it should have gained 5 immortal');
+            instance.sendTransaction({ from: accounts[1], value: web3.toWei(1.26, 'ether') }).then(function(){
+                instance.sendTransaction({ from: accounts[1], value: web3.toWei(1.76, 'ether') });
+                instance.tokenAssigned().then(function (tokenAssigned) {
+                    assert.equal(tokenAssigned.valueOf(), 5, 'it should have gained 5 immortal');
+                });
             });
         });
     });

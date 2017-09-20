@@ -2,10 +2,11 @@ pragma solidity ^0.4.15;
 
 contract TokenEIP20 {
 
-    function name() constant returns (string);
-    function symbol() constant returns (string);
-    function decimals() constant returns (uint8);
-    function totalSupply() constant returns (uint256);
+    // OPTIONALS
+    // function name() constant returns (string);
+    // function symbol() constant returns (string);
+    // function decimals() constant returns (uint8);
+    // function totalSupply() constant returns (uint256);
 
     function balanceOf(address _owner) constant returns (uint256 balance);
     function transfer(address _to, uint256 _value) returns (bool success);
