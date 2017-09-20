@@ -1,0 +1,29 @@
+{
+  "name": "persians",
+  "version": "1.0.0",
+  "description": "Battle smart contract is a platform/ecosystem for gaming built on top of a decentralized smart contract, allowing anyone to use a Warrior tokens: entities which exists on the Ethereum Network, which can be traded or used to enter in events to do battle with other Warrior tokens holders for fun and profit! Every warrior token has a proper value in **Battle Point (BP)** that represent his strength on the battle contract.",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "babel-preset-stage-3": "^6.17.0",
+    "babel-register": "^6.26.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Neurone/persians.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Neurone/persians/issues"
+  },
+  "homepage": "https://github.com/Neurone/persians#readme"
+}

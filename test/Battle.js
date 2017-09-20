@@ -1,5 +1,7 @@
+
 var Battle = artifacts.require('./Battle.sol');
 var SimpleToken = artifacts.require("./SimpleToken.sol");
+const assertJump = require('./helpers/assertJump');
 
 /*
     // result.tx => transaction hash, string
@@ -21,14 +23,18 @@ contract('Battle', function (accounts) {
     const NOW = Math.floor(new Date().getTime() / 1000);
     const YESTERDAY = NOW - (3600 * 24);
     const D18 = Math.pow(10, 18);
+    const BP_PERSIAN = 1;
+    const BP_IMMORTAL = 100;
+    const BP_SPARTAN = 1000;
+    const BP_ATHENIAN = 100;
 
     var battle, persians, immortals, spartans, athenians;
 
-    before("create tokens and deploy battle contract", function () {
-        return SimpleToken.new("Persian", "PRS", 18, 300000 * Math.pow(10, 18)).then(function (instance) {
+    before("distribute all tokens and deploy battle contract", function () {
+        return SimpleToken.new("Persian", "PRS", 18, 300000 * D18).then(function (instance) {
             persians = instance;
-            persians.transfer(persian_1, 150000 * Math.pow(10, 18));
-            return persians.transfer(persian_2, 150000 * Math.pow(10, 18));
+            persians.transfer(persian_1, 150000 * D18);
+            return persians.transfer(persian_2, 150000 * D18);
         }).then(function () {
             return SimpleToken.new("Immortal", "IMT", 0, 100).then(function (instance) {
                 immortals = instance;
@@ -36,16 +42,16 @@ contract('Battle', function (accounts) {
                 return immortals.transfer(immortal_2, 50);;
             })
         }).then(function () {
-            return SimpleToken.new("Spartan", "300", 18, 300 * Math.pow(10, 18)).then(function (instance) {
+            return SimpleToken.new("Spartan", "300", 18, 300 * D18).then(function (instance) {
                 spartans = instance;
-                spartans.transfer(spartan_1, 150 * Math.pow(10, 18));
-                return spartans.transfer(spartan_2, 150 * Math.pow(10, 18));
+                spartans.transfer(spartan_1, 150 * D18);
+                return spartans.transfer(spartan_2, 150 * D18);
             })
         }).then(function () {
-            return SimpleToken.new("Athenian", "100", 18, 100 * Math.pow(10, 18)).then(function (instance) {
+            return SimpleToken.new("Athenian", "100", 18, 100 * D18).then(function (instance) {
                 athenians = instance;
-                athenians.transfer(athenian_1, 50 * Math.pow(10, 18));
-                return athenians.transfer(athenian_2, 50 * Math.pow(10, 18));
+                athenians.transfer(athenian_1, 50 * D18);
+                return athenians.transfer(athenian_2, 50 * D18);
             })
         }).then(function () {
             var startBattle = NOW;
@@ -57,30 +63,64 @@ contract('Battle', function (accounts) {
         });
     });
 
-    it('should give error because allowance is too few', function () {
-        //This account has not persian tokens, hence not enough allowance
-        battle.assignPersiansToBattle(20 * Math.pow(10, 18), { from: immortal_1 })
-        .then(assert.fail)
-        .catch(function (error) {
-            assert(error.message.indexOf('invalid opcode') >= 0, "it should have thrown an exception because there's not enough allowance.");
-        });
-        //This account has not allowed any tokens
-        battle.assignPersiansToBattle(20 * Math.pow(10, 18), { from: persian_1 })
-        .then(assert.fail)
-        .catch(function (error) {
-            assert(error.message.indexOf('invalid opcode') >= 0, "it should have thrown an exception because there's not enough allowance.");
-        });
-        //This account has not alloed enough tokens
-        persians.approve(battle.address, 10 * Math.pow(10, 18)).then(function() {
-            battle.assignPersiansToBattle(20 * Math.pow(10, 18), { from: immortal_1 })
-            .then(assert.fail)
-            .catch(function (error) {
-                assert(error.message.indexOf('invalid opcode') >= 0, "it should have thrown an exception because there's not enough allowance.");
-            });
-        });
+    it('should give error because allowance is too few', async function () {
+        try {
+            //This account has not persian tokens, hence not enough allowance
+            await battle.assignPersiansToBattle(20 * Math.pow(10, 18), { from: immortal_1 });
+            assert.fail("it should have thrown an exception because there's not enough allowance.");
+        } catch (error) {
+            assertJump(error);
+        }
+
+        try {
+            //This account has not persian tokens, hence not enough allowance
+            await battle.assignPersiansToBattle(20 * Math.pow(10, 18), { from: persian_1 });
+            assert.fail("it should have thrown an exception because there's not enough allowance.");
+        } catch (error) {
+            assertJump(error);
+        }
+
+        try {
+            //This account has not alloed enough tokens
+            await persians.approve(battle.address, 10 * Math.pow(10, 18), { from: immortal_1 });
+            await battle.assignPersiansToBattle(20 * Math.pow(10, 18), { from: immortal_1 });
+            assert.fail("it should have thrown an exception because there's not enough allowance.");
+        } catch (error) {
+            assertJump(error);
+        }
     })
 
-    it('The battle is still in progress', function () {
+    // it('should assign warriors to battle', function () {
+    //     //Assign 150.000 persians to battle
+    //     // var tokens = 150000 * D18;
+    //     // var expectedPersiansBP = tokens * BP_PERSIAN;
+    //     // var sender = persian_1;
+    //     // return persians.approve(battle.address, tokens, { from: sender }).then(function () {
+    //     //     return battle.assignPersiansToBattle(tokens, { from: sender }).then(function () {
+    //     //         return battle.getPersiansBattlePoints.call().then(function (result) {
+    //     //             //console.log(result);
+    //     //             //console.log(JSON.stringify(expectedPersiansBP));
+    //     //             //assert.equal(result, expectedPersiansBP, 'persians battle points are not calculated correctly');
+    //     //         });
+    //     //     });
+    //     // })
+    //     // .then(function () {
+    //     //     //Assign other 50.000 persians to battle
+    //     //     tokens = 50000 * D18;
+    //     //     expectedPersiansBP += tokens * BP_PERSIAN;
+    //     //     sender = persian_2;
+    //     //     return persians.approve(battle.address, tokens, { from: sender }).then(function () {
+    //     //         return battle.assignPersiansToBattle(tokens, { from: sender }).then(function () {
+    //     //             return battle.getPersiansBattlePoints.call().then(function (result) {
+    //     //                 console.log("BBBB:"+result+"--"+expectedPersiansBP);
+    //     //                 assert.equal(result.valueOf(), expectedPersiansBP + 1, 'persians battle points are not calculated correctly');
+    //     //             });
+    //     //         });
+    //     //     });
+    //     // });
+    // });
+
+    it('battle is still in progress', function () {
         Battle.new(YESTERDAY, 3600 * 48, 15, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
             instance.getWinningFaction().then(function (result) {
                 assert(result == "The battle is still in progress");
@@ -88,7 +128,7 @@ contract('Battle', function (accounts) {
         });
     });
 
-    it('The battle is still in progress', function () {
+    it('battle is still in progress', function () {
         Battle.new(YESTERDAY, 3600 * 48, 15, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
             instance.getWinningFaction().then(function (result) {
                 assert(result == "The battle is still in progress");
@@ -96,7 +136,7 @@ contract('Battle', function (accounts) {
         });
     });
 
-    it('The battle is over', function () {
+    it('battle is over', function () {
         Battle.new(YESTERDAY, 3600 * 1, 15, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
             instance.getWinningFaction().then(function (result) {
                 assert(result != "The battle is still in progress");
@@ -104,7 +144,7 @@ contract('Battle', function (accounts) {
         });
     });
 
-    it('The battle ended in a draw!', function () {
+    it('battle ended in a draw!', function () {
         Battle.new(YESTERDAY, 3600 * 1, 15, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
             instance.setDraw();
             instance.getWinningFaction().then(function (result) {
@@ -126,5 +166,5 @@ contract('Battle', function (accounts) {
             instance.getWinningFaction().then(function (result) { assert(result == "Greeks"); });
         });
     });
-    
+
 });
