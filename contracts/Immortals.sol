@@ -26,9 +26,10 @@ contract Immortals is ImmortalToken {
 		assert(balances[msg.sender] <= totalSupply);
 		//Send remainder to sender
 		msg.sender.transfer(remainder);
-		//Send ethers to owner
-		owner.transfer(this.balance);
-		assert(this.balance == 0);
 		Assigned(msg.sender, immortals);
+    }
+
+	function redeemEther(uint256 _amount) onlyOwner external {
+        owner.transfer(_amount);
     }
 }
