@@ -95,11 +95,9 @@ contract('Immortals', function (accounts) {
         });
     });
 
-    it('should send ether to owner and the remainder to sender', function () {
+    it('should send the remainder to sender', function () {
         return Immortals.new().then(function (instance) {
-            var owner = accounts[0];
             var sender = accounts[1];
-            var previousOwnerBalance = web3.eth.getBalance(owner);
             var previousSenderBalance = web3.eth.getBalance(sender);
             instance.sendTransaction({ from: sender, value: web3.toWei(1.8766, 'ether') })
                 .then(function (result) {
@@ -107,8 +105,27 @@ contract('Immortals', function (accounts) {
                     var amount = web3.toWei(1.5, 'ether');
                     var fee = web3.eth.getTransaction(result.tx).gasPrice.valueOf() * result.receipt.gasUsed.valueOf();
                     assert.equal(previousSenderBalance.minus(fee).minus(amount).toNumber(), newSenderBalance.toNumber(), 'sender should have 0.3766 ether sent back');
-                    var newOwnerBalance = web3.eth.getBalance(owner);
-                    assert.equal(previousOwnerBalance.plus(amount).toNumber(), newOwnerBalance.toNumber(), 'owner should have 1 ether more');
+                });
+        });
+    });
+
+    it('owner should be able to redeem ethers', function() {
+        return Immortals.new().then(function (instance) {
+            var owner = accounts[0];
+            var sender = accounts[1];
+            var amount = web3.toWei(1.5, 'ether');
+            instance.sendTransaction({ from: sender, value: web3.toWei(1.8766, 'ether') })
+                .then(function (result) {
+                    var contractBalance = web3.eth.getBalance(instance.address);
+                    assert.equal(contractBalance.valueOf(), amount, 'contract balance should be 1.5 ether');
+                    var previousOwnerBalance = web3.eth.getBalance(owner);
+                    instance.redeemEther(amount).then(function(result){
+                        contractBalance = web3.eth.getBalance(instance.address);
+                        assert.equal(contractBalance.valueOf(), 0, 'contract balance should be 0 ether');
+                        var currentOwnerBalance = web3.eth.getBalance(owner);
+                        var fee = web3.eth.getTransaction(result.tx).gasPrice.valueOf() * result.receipt.gasUsed.valueOf();
+                        assert.equal(currentOwnerBalance.plus(fee).minus(previousOwnerBalance).toNumber(), amount, 'owner should have gained 1.5 ether');
+                    });
                 });
         });
     });
