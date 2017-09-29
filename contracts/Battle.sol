@@ -30,23 +30,26 @@ contract Battle is Timed {
 
     /*******************************************************************************************
     When the battle ends in a draw:
-        (*) 10% of troops of both sides lie on the ground
+        (*) 10% of main troops of both sides lie on the ground
         (*) 90% of them can be retrieved by each former owner
         (*) No slaves are assigned
     
     When the battle ends with a winning factions:
-        (*) 10% of troops of both sides lie on the ground
+        (*) 10% of main troops of both sides lie on the ground
         (*) 90% of them can be retrieved by each former owner
         (*) Surviving warriors of the loosing faction are assigned as slaves to winners
+        (*) Slaves are computed based on the BP contributed by each sender
     
+    Persians and Spartans are main troops.
+
     Immortals and Athenians are support troops: there will be no casualties in their row, and they can
-    be retrieved without losses.
+    be retrieved without losses by original senders.
     
     Only Persians and Spartans can be slaves. Immortals and Athenians WILL NOT be sent back as slaves to winners.
 
     Main Net Addresses
     Persians            = 0xaEc98A708810414878c3BCDF46Aad31dEd4a4557;
-    Immortals           = 0xED19698C0abdE8635413aE7AD7224DF6ee30bF22;
+    Immortals           = 0x22E5F62D0FA19974749faa194e3d3eF6d89c08d7;
     Spartans            = 0x163733bcc28dbf26B41a8CfA83e369b5B3af741b;
     Athenians           = 0x17052d51E954592C1046320c2371AbaB6C73Ef10;
     *******************************************************************************************/
@@ -89,27 +92,46 @@ contract Battle is Timed {
 
     /**** PHASE #2 ******/
 
-    function victoryIsOurs() onlyIfTimePassed external returns (bool success) {
-        // Persians win
-        if (getPersiansBattlePoints() > getGreeksBattlePoints()) retrieveWarriorsAndSlaves(persians, spartans);
-        // Spartans win
-        else if (getPersiansBattlePoints() < getGreeksBattlePoints()) retrieveWarriorsAndSlaves(spartans, persians);
-        // It's a draw
-        else retireveWarriors(msg.sender, persians, 10);
+    function missionAccomplished() onlyIfTimePassed external returns (bool success) {
+        
+        //TODO Compute the BPs contributed by the sender
+        
+        //TODO Send back Immortals untouched
+
+        //TODO Send back Athenians untouched
+
+        
+
+        if (getPersiansBattlePoints() > getGreeksBattlePoints()) {
+            // Persians won, send back Persians
+            //retrieveWarriorsAndSlaves(persians, spartans);
+
+            // TODO Assign spartan slaves
+
+        } else if (getPersiansBattlePoints() < getGreeksBattlePoints()) {
+            // Greeks won, send back Spartans
+            //retrieveWarriorsAndSlaves(spartans, persians);
+
+            // TODO Assign spartan slaves
+        } else {
+            // It's a draw, send back persians and spartans (10% of casualties), no slaves
+            
+            //retireveWarriors(msg.sender, persians, 10);
+        }
         return true;
     }
 
-    // When the battle is over, Immortals can be sent back to the former owner
-    function retrieveImmortals() onlyIfTimePassed external returns (bool success) {
-        retireveWarriors(msg.sender, immortals, 0);
-        return true;
-    }
+    // // When the battle is over, Immortals can be sent back to the former owner
+    // function retrieveImmortals() onlyIfTimePassed external returns (bool success) {
+    //     retireveWarriors(msg.sender, immortals, 0);
+    //     return true;
+    // }
 
-    // When the battle is over, Athenians can be sent back to the former owner
-    function retrieveAthenians() onlyIfTimePassed external returns (bool success) {
-        retireveWarriors(msg.sender, athenians, 0);
-        return true;
-    }
+    // // When the battle is over, Athenians can be sent back to the former owner
+    // function retrieveAthenians() onlyIfTimePassed external returns (bool success) {
+    //     retireveWarriors(msg.sender, athenians, 0);
+    //     return true;
+    // }
 
     /*** PRIVATE FUNCTIONS ***/
 

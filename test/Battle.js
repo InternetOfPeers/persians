@@ -236,83 +236,83 @@ contract('Battle', function (accounts) {
         assert(false, 'TO BE IMPLEMENTED');
     });
 
-    it('players can retrieve their own immortals', async function () {
-        let player = immortal_1;
-        let lastImmortalsBalance = await immortals.balanceOf.call(player);
-        let lastImmortalsOnBattleField = await battle.getImmortalsOnTheBattlefield.call(player);
-        let retrieved = await battle.retrieveImmortals({ from: player });
-        assert(retrieved, 'immortals should have been retrieved from the battlefield');
-        let immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield.call(player);
-        assert.equal(0, immortalsOnTheBattlefield, 'all player\'s immortals should have left the battlefield');
-        let currentImmortalsBalance = await immortals.balanceOf.call(player);
-        assert(lastImmortalsBalance.plus(lastImmortalsOnBattleField).equals(currentImmortalsBalance), 'immortals should have been returned to the correct player');
+    // it('players can retrieve their own immortals', async function () {
+    //     let player = immortal_1;
+    //     let lastImmortalsBalance = await immortals.balanceOf.call(player);
+    //     let lastImmortalsOnBattleField = await battle.getImmortalsOnTheBattlefield.call(player);
+    //     let retrieved = await battle.retrieveImmortals({ from: player });
+    //     assert(retrieved, 'immortals should have been retrieved from the battlefield');
+    //     let immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield.call(player);
+    //     assert.equal(0, immortalsOnTheBattlefield, 'all player\'s immortals should have left the battlefield');
+    //     let currentImmortalsBalance = await immortals.balanceOf.call(player);
+    //     assert(lastImmortalsBalance.plus(lastImmortalsOnBattleField).equals(currentImmortalsBalance), 'immortals should have been returned to the correct player');
 
-        player = immortal_2;
-        lastImmortalsBalance = await immortals.balanceOf.call(player);
-        lastImmortalsOnBattleField = await battle.getImmortalsOnTheBattlefield.call(player);
-        retrieved = await battle.retrieveImmortals({ from: player });
-        assert(retrieved, 'immortals should have been retrieved from the battlefield');
-        immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield.call(player);
-        assert.equal(0, immortalsOnTheBattlefield, 'all player\'s immortals should have left the battlefield');
-        currentImmortalsBalance = await immortals.balanceOf.call(player);
-        assert(lastImmortalsBalance.plus(lastImmortalsOnBattleField).equals(currentImmortalsBalance), 'immortals should have been returned to the correct player');
+    //     player = immortal_2;
+    //     lastImmortalsBalance = await immortals.balanceOf.call(player);
+    //     lastImmortalsOnBattleField = await battle.getImmortalsOnTheBattlefield.call(player);
+    //     retrieved = await battle.retrieveImmortals({ from: player });
+    //     assert(retrieved, 'immortals should have been retrieved from the battlefield');
+    //     immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield.call(player);
+    //     assert.equal(0, immortalsOnTheBattlefield, 'all player\'s immortals should have left the battlefield');
+    //     currentImmortalsBalance = await immortals.balanceOf.call(player);
+    //     assert(lastImmortalsBalance.plus(lastImmortalsOnBattleField).equals(currentImmortalsBalance), 'immortals should have been returned to the correct player');
 
-        //player has already retrieved his immortals
-        try {
-            await battle.retrieveImmortals({ from: player });
-            assert.fail("it should have thrown an exception because player has not immortals to retrieve anymore");
-        } catch (error) {
-            assertJump(error);
-        }
+    //     //player has already retrieved his immortals
+    //     try {
+    //         await battle.retrieveImmortals({ from: player });
+    //         assert.fail("it should have thrown an exception because player has not immortals to retrieve anymore");
+    //     } catch (error) {
+    //         assertJump(error);
+    //     }
 
-        player = persian_1;
-        //This player has not sent any immortals
-        try {
-            await battle.retrieveImmortals({ from: player });
-            assert.fail("it should have thrown an exception because player has not sent any immortals to the battlefield");
-        } catch (error) {
-            assertJump(error);
-        }
-    });
+    //     player = persian_1;
+    //     //This player has not sent any immortals
+    //     try {
+    //         await battle.retrieveImmortals({ from: player });
+    //         assert.fail("it should have thrown an exception because player has not sent any immortals to the battlefield");
+    //     } catch (error) {
+    //         assertJump(error);
+    //     }
+    // });
 
-    it('players can retrieve their own athenians', async function () {
-        let player = athenian_1;
-        let lastAtheniansBalance = await athenians.balanceOf.call(player);
-        let lastAtheniansOnBattleField = await battle.getAtheniansOnTheBattlefield.call(player);
-        let retrieved = await battle.retrieveAthenians({ from: player });
-        assert(retrieved, 'athenians should have been retrieved from the battlefield');
-        let atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield.call(player);
-        assert.equal(0, atheniansOnTheBattlefield, 'all player\'s athenians should have left the battlefield');
-        let currentAtheniansBalance = await athenians.balanceOf.call(player);
-        assert(lastAtheniansBalance.plus(lastAtheniansOnBattleField).equals(currentAtheniansBalance), 'athenians should have been returned to the correct player');
+    // it('players can retrieve their own athenians', async function () {
+    //     let player = athenian_1;
+    //     let lastAtheniansBalance = await athenians.balanceOf.call(player);
+    //     let lastAtheniansOnBattleField = await battle.getAtheniansOnTheBattlefield.call(player);
+    //     let retrieved = await battle.retrieveAthenians({ from: player });
+    //     assert(retrieved, 'athenians should have been retrieved from the battlefield');
+    //     let atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield.call(player);
+    //     assert.equal(0, atheniansOnTheBattlefield, 'all player\'s athenians should have left the battlefield');
+    //     let currentAtheniansBalance = await athenians.balanceOf.call(player);
+    //     assert(lastAtheniansBalance.plus(lastAtheniansOnBattleField).equals(currentAtheniansBalance), 'athenians should have been returned to the correct player');
 
-        player = athenian_2;
-        lastAtheniansBalance = await athenians.balanceOf.call(player);
-        lastAtheniansOnBattleField = await battle.getAtheniansOnTheBattlefield.call(player);
-        retrieved = await battle.retrieveAthenians({ from: player });
-        assert(retrieved, 'athenians should have been retrieved from the battlefield');
-        atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield.call(player);
-        assert.equal(0, atheniansOnTheBattlefield, 'all player\'s athenians should have left the battlefield');
-        currentAtheniansBalance = await athenians.balanceOf.call(player);
-        assert(lastAtheniansBalance.plus(lastAtheniansOnBattleField).equals(currentAtheniansBalance), 'athenians should have been returned to the correct player');
+    //     player = athenian_2;
+    //     lastAtheniansBalance = await athenians.balanceOf.call(player);
+    //     lastAtheniansOnBattleField = await battle.getAtheniansOnTheBattlefield.call(player);
+    //     retrieved = await battle.retrieveAthenians({ from: player });
+    //     assert(retrieved, 'athenians should have been retrieved from the battlefield');
+    //     atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield.call(player);
+    //     assert.equal(0, atheniansOnTheBattlefield, 'all player\'s athenians should have left the battlefield');
+    //     currentAtheniansBalance = await athenians.balanceOf.call(player);
+    //     assert(lastAtheniansBalance.plus(lastAtheniansOnBattleField).equals(currentAtheniansBalance), 'athenians should have been returned to the correct player');
 
-        //player has already retrieved his athenians
-        try {
-            await battle.retrieveAthenians({ from: player });
-            assert.fail("it should have thrown an exception because player has not athenians to retrieve anymore");
-        } catch (error) {
-            assertJump(error);
-        }
+    //     //player has already retrieved his athenians
+    //     try {
+    //         await battle.retrieveAthenians({ from: player });
+    //         assert.fail("it should have thrown an exception because player has not athenians to retrieve anymore");
+    //     } catch (error) {
+    //         assertJump(error);
+    //     }
 
-        player = persian_1;
-        //This player has not sent any athenians
-        try {
-            await battle.retrieveAthenians({ from: player });
-            assert.fail("it should have thrown an exception because player has not sent any athenians to the battlefield");
-        } catch (error) {
-            assertJump(error);
-        }
-    });
+    //     player = persian_1;
+    //     //This player has not sent any athenians
+    //     try {
+    //         await battle.retrieveAthenians({ from: player });
+    //         assert.fail("it should have thrown an exception because player has not sent any athenians to the battlefield");
+    //     } catch (error) {
+    //         assertJump(error);
+    //     }
+    // });
 
     it('battle is still in progress', function () {
         Battle.new(YESTERDAY, 3600 * 48, 15, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
