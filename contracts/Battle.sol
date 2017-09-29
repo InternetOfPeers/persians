@@ -7,14 +7,21 @@ import "./SafeMathLib.sol";
 contract Battle is Timed {
     using SafeMathLib for uint256;
 
-    string  public constant VERSION               = "1.0.0";
+    string  public constant VERSION                 = "1.0.0";
     
-    uint256 public constant MAX_PERSIANS          = 300000 * 10**18;  // 300.000
-    uint256 public constant MAX_SPARTANS          = 300 * 10**18;     // 300
-    uint256 public constant MAX_IMMORTALS         = 100;              // 100
-    uint256 public constant MAX_ATHENIANS         = 100 * 10**18;     // 100
+    uint256 public constant MAX_PERSIANS            = 300000 * 10**18;  // 300.000
+    uint256 public constant MAX_SPARTANS            = 300 * 10**18;     // 300
+    uint256 public constant MAX_IMMORTALS           = 100;              // 100
+    uint256 public constant MAX_ATHENIANS           = 100 * 10**18;     // 100
 
-    uint8   public constant BATTLE_POINT_DECIMALS = 18;
+    uint256 public constant D18                     = 10**18;           // Common decimal positions
+    uint8   public constant BP_PERSIAN              = 1;                // Each Persian worths 1 Battle Point
+    uint8   public constant BP_IMMORTAL             = 100;              // Each Immortal worths 100 Battle Points
+    uint16  public constant BP_SPARTAN              = 1000;             // Each Spartan worths 1000 Battle Points
+    uint8   public constant BP_ATHENIAN             = 100;              // Each Athenians worths 100 Battle Points
+
+    uint8   public constant BATTLE_POINT_DECIMALS   = 18;
+    uint8   public constant BATTLE_CASUALTIES       = 10;               //Percentage of Persian and Spartan casualties
     
     address public persians;
     address public immortals;
@@ -65,73 +72,56 @@ contract Battle is Timed {
     function assignPersiansToBattle(uint256 _warriors) onlyIfInTime external returns (bool success) {
         assignWarriorsToBattle(msg.sender, persians, _warriors, MAX_PERSIANS);
         // Persians are divisible with 18 decimals and their value is 1 BP
-        WarriorsAssignedToBattlefield(msg.sender, persians, _warriors / 10**18);
+        WarriorsAssignedToBattlefield(msg.sender, persians, _warriors.div(D18));
         return true;
     }
 
     function assignSpartansToBattle(uint256 _warriors) onlyIfInTime external returns (bool success) {
         assignWarriorsToBattle(msg.sender, spartans, _warriors, MAX_SPARTANS);
         // Spartans are divisible with 18 decimals and their value is 1.000 BP
-        WarriorsAssignedToBattlefield(msg.sender, spartans, (_warriors / 10**18) * 1000);
+        WarriorsAssignedToBattlefield(msg.sender, spartans, _warriors.div(D18).mul(BP_SPARTAN));
         return true;
     }
 
     function assignImmortalsToBattle(uint256 _warriors) onlyIfInTime external returns (bool success) {
         assignWarriorsToBattle(msg.sender, immortals, _warriors, MAX_IMMORTALS);
         // Immortals are not divisible and their value is 100 BP
-        WarriorsAssignedToBattlefield(msg.sender, immortals, _warriors * 100);
+        WarriorsAssignedToBattlefield(msg.sender, immortals, _warriors.mul(BP_IMMORTAL));
         return true;
     }
 
     function assignAtheniansToBattle(uint256 _warriors) onlyIfInTime external returns (bool success) {
         assignWarriorsToBattle(msg.sender, athenians, _warriors, MAX_ATHENIANS);
         // Athenians are divisible with 18 decimals and their value is 100 BP
-        WarriorsAssignedToBattlefield(msg.sender, athenians, (_warriors / 10**18) * 100);
+        WarriorsAssignedToBattlefield(msg.sender, athenians, _warriors.div(D18).mul(BP_ATHENIAN));
         return true;
     }
 
     /**** PHASE #2 ******/
 
-    function missionAccomplished() onlyIfTimePassed external returns (bool success) {
-        
-        //TODO Compute the BPs contributed by the sender
-        
-        //TODO Send back Immortals untouched
-
-        //TODO Send back Athenians untouched
-
-        
+    function redeemWarriors() onlyIfTimePassed external returns (bool success) {
 
         if (getPersiansBattlePoints() > getGreeksBattlePoints()) {
-            // Persians won, send back Persians
-            //retrieveWarriorsAndSlaves(persians, spartans);
-
-            // TODO Assign spartan slaves
-
+            // Persians won, compute slaves
+            uint256 slaveWarriors = computeSlaves(msg.sender, spartans);
+            if (slaveWarriors > 0) {
+                // Send back Spartan slaves
+                sendWarriors(msg.sender, spartans, slaveWarriors);
+            }
+            // Send back Persians but casualties
+            retrieveWarriors(msg.sender, persians, BATTLE_CASUALTIES);
         } else if (getPersiansBattlePoints() < getGreeksBattlePoints()) {
-            // Greeks won, send back Spartans
-            //retrieveWarriorsAndSlaves(spartans, persians);
-
-            // TODO Assign spartan slaves
-        } else {
-            // It's a draw, send back persians and spartans (10% of casualties), no slaves
+            // TODO Greeks won, send back Persian slaves
             
-            //retireveWarriors(msg.sender, persians, 10);
+            // Send back Spartans but casualties
+            retrieveWarriors(msg.sender, spartans, BATTLE_CASUALTIES);
         }
+        // Send back Immortals untouched
+        retrieveWarriors(msg.sender, immortals, 0);
+        // Send back Athenians untouched
+        retrieveWarriors(msg.sender, athenians, 0);
         return true;
     }
-
-    // // When the battle is over, Immortals can be sent back to the former owner
-    // function retrieveImmortals() onlyIfTimePassed external returns (bool success) {
-    //     retireveWarriors(msg.sender, immortals, 0);
-    //     return true;
-    // }
-
-    // // When the battle is over, Athenians can be sent back to the former owner
-    // function retrieveAthenians() onlyIfTimePassed external returns (bool success) {
-    //     retireveWarriors(msg.sender, athenians, 0);
-    //     return true;
-    // }
 
     /*** PRIVATE FUNCTIONS ***/
 
@@ -142,30 +132,53 @@ contract Battle is Timed {
         warriorsOnTheBattlefield[_faction] = warriorsOnTheBattlefield[_faction].add(_warriors);
     }
 
-    function retrieveWarriorsAndSlaves(address _winners, address _loosers) private {
-        uint256 slaveWarriors = getSlaves(msg.sender, _winners, _loosers);
-        retireveWarriors(msg.sender, _winners, 10);
-        sendWarriors(msg.sender, _loosers, slaveWarriors);
-    }
-
-    function retireveWarriors(address _player, address _faction, uint8 _deadAmount) private {
-        if (_deadAmount > 0) {
-            uint256 _deadWarriors = warriors[_player][_faction].div(_deadAmount);
-            warriorsIntoAde[_faction] = warriorsIntoAde[_faction].add(_deadWarriors);
-            warriors[_player][_faction] = warriors[_player][_faction].sub(_deadWarriors);
+    function retrieveWarriors(address _player, address _faction, uint8 _deadPercentage) private {
+        if (warriors[_player][_faction] > 0) {
+            uint256 _deadWarriors = 0;
+            if (_deadPercentage > 0) {
+                _deadWarriors = warriors[_player][_faction].per(_deadPercentage);
+                warriorsIntoAde[_faction] = warriorsIntoAde[_faction].add(_deadWarriors);
+            }
+            uint256 _warriors = warriors[_player][_faction].sub(_deadWarriors);
+            warriors[_player][_faction] = 0;
+            sendWarriors(_player, _faction, _warriors);
+            WarriorsBackToHome(_player, _faction, _warriors);
         }
-        uint256 _warriors = warriors[_player][_faction];
-        require(_warriors > 0);
-        warriors[_player][_faction] = 0;
-        sendWarriors(_player, _faction, _warriors);
-        WarriorsBackToHome(_player, _faction, _warriors);
     }
 
     function sendWarriors(address _player, address _faction, uint256 _warriors) private {
         assert(TokenERC20(_faction).transfer(_player, _warriors));
     }
 
-    /*** DAPP HELPERS AND CONSTANT FUNCTIONS ***/
+    // // This method returns sensible values for two combinations of parameters: (persians, spartans) and (spartans, persians)
+    // function getSlaves(address _player, address _winningFaction, address _looserFaction) constant returns (uint256 slaves) {
+    //     return ((_winningFaction == persians && _looserFaction == spartans) || (_winningFaction == spartans && _looserFaction == persians)) ?
+    //         (warriorsOnTheBattlefield[_looserFaction] - (warriorsOnTheBattlefield[_looserFaction] / 10)) / (warriorsOnTheBattlefield[_winningFaction] / warriors[_player][_winningFaction]) : 0;
+    // }
+
+    /*** CONSTANT FUNCTIONS AND DAPP HELPERS ***/
+
+    function computeSlaves(address _player, address _loosingMainTroops) constant returns (uint256 slaves) {
+        uint256 _slaves = 0;
+        address _winningMainTroops;
+        address _winningSupportTroops;
+        address _loosingSupportTroops;
+        if (_loosingMainTroops == spartans) {
+            _winningMainTroops = persians;
+            _winningSupportTroops = immortals;
+            _loosingSupportTroops = athenians;
+        } else {
+            _winningMainTroops = spartans;
+            _winningSupportTroops = athenians;
+            _loosingSupportTroops = immortals;
+        }
+        
+        // uint256 _looserWarriors = warriorsOnTheBattlefield[_loosingFaction].sub(warriorsOnTheBattlefield[_loosingFaction].div(100).mul(BATTLE_CASUALTIES));
+
+        return _slaves;
+        //    (warriorsOnTheBattlefield[_looserFaction] - (warriorsOnTheBattlefield[_looserFaction] / 10)) / (warriorsOnTheBattlefield[_winningFaction] / warriors[_player][_winningFaction]) : 0;
+    }
+
 
     function getPersiansOnTheBattlefield(address _player) constant returns (uint persiansOnTheBattlefield) {
         return warriors[_player][persians];
@@ -184,17 +197,11 @@ contract Battle is Timed {
     }
 
     function getPersiansBattlePoints() constant returns (uint battlePoints) {
-        return ((warriorsOnTheBattlefield[persians]) + (warriorsOnTheBattlefield[immortals] * 10**18 * 100));
+        return (warriorsOnTheBattlefield[persians].mul(BP_PERSIAN) + warriorsOnTheBattlefield[immortals].mul(D18).mul(BP_IMMORTAL));
     }
 
     function getGreeksBattlePoints() constant returns (uint battlePoints) {
-        return ((warriorsOnTheBattlefield[spartans] * 1000) + (warriorsOnTheBattlefield[athenians] * 100));
-    }
-
-    // This method returns sensible values for two combinations of parameters: (persians, spartans) and (spartans, persians)
-    function getSlaves(address _player, address _winningFaction, address _looserFaction) constant returns (uint256 slaves) {
-        return ((_winningFaction == persians && _looserFaction == spartans) || (_winningFaction == spartans && _looserFaction == persians)) ?
-            (warriorsOnTheBattlefield[_looserFaction] - (warriorsOnTheBattlefield[_looserFaction] / 10)) / (warriorsOnTheBattlefield[_winningFaction] / warriors[_player][_winningFaction]) : 0;
+        return (warriorsOnTheBattlefield[spartans].mul(BP_SPARTAN) + warriorsOnTheBattlefield[athenians].mul(BP_ATHENIAN));
     }
     
     function isInProgress() constant returns (bool inProgress) {

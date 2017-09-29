@@ -181,6 +181,10 @@ contract('Battle', function (accounts) {
         assert(persiansBP.equals(expectedPersiansBP), 'spartans army should have ' + expectedPersiansBP + ' battle points, but they have ' + persiansBP + ' battle points');
     });
 
+    it('can\'t assign too much troops to the battlefield', async function() {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
     it('battle should be ended', async function () {
         await battle.setTime(NOW, 0, 0);
         let ended = await battle.isEnded();
