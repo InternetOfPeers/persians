@@ -1,7 +1,7 @@
 pragma solidity ^0.4.13;
 
 /**
- * @title SafeMath (from https://github.com/OpenZeppelin/zeppelin-solidity/blob/0b9afefa9363df0f00e85057a530c83ca3b9a529/contracts/math/SafeMath.sol)
+ * @title Improved SafeMath from https://github.com/OpenZeppelin/zeppelin-solidity/blob/0b9afefa9363df0f00e85057a530c83ca3b9a529/contracts/math/SafeMath.sol
  * @dev Math operations with safety checks that throw on error
  */
 library SafeMathLib {
@@ -28,5 +28,9 @@ library SafeMathLib {
         uint256 c = a + b;
         assert(c >= a);
         return c;
+    }
+
+    function per(uint256 a, uint256 b) internal constant returns (uint256) {
+        return mul(div(a, 100), b);
     }
 }
