@@ -7,12 +7,12 @@ contract Timed {
     uint256 public avarageBlockTime;    //seconds
 
     // This check is an helper function for ÐApp to check the effect of the NEXT transaction, NOT simply the current state of the contract
-    function isInTime() constant returns (bool _isInTime) {
-        return block.timestamp >= (startTime - avarageBlockTime) && !isTimePassed();
+    function isInTime() constant returns (bool inTime) {
+        return block.timestamp >= (startTime - avarageBlockTime) && !isTimeExpired();
     }
 
     // This check is an helper function for ÐApp to check the effect of the NEXT transacion, NOT simply the current state of the contract
-    function isTimePassed() constant returns (bool _isTimePassed) {
+    function isTimeExpired() constant returns (bool timeExpired) {
         return block.timestamp + avarageBlockTime >= endTime;
     }
 

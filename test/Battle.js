@@ -86,7 +86,7 @@ contract('Battle', function (accounts) {
             assertJump(error);
         }
 
-        //This account has not alloed enough tokens
+        //This account has not allowed enough tokens
         try {
             await persians.approve(battle.address, 10 * Math.pow(10, 18), { from: immortal_1 });
             await battle.assignPersiansToBattle(20 * Math.pow(10, 18), { from: immortal_1 });
@@ -121,20 +121,197 @@ contract('Battle', function (accounts) {
         persiansBP = await battle.getPersiansBattlePoints.call();
         assert(expectedPersiansBP.equals(persiansBP), 'immortals battle points are not calculated correctly. Expected: ' + expectedPersiansBP + ' -- Found: ' + persiansBP);
 
+        //Assign other 10 immortals: their force is added to the persians side.
+        tokens = web3.toBigNumber(10);
+        expectedPersiansBP = expectedPersiansBP.plus(tokens.mul(D18).mul(BP_IMMORTAL));
+        await immortals.approve(battle.address, tokens, { from: immortal_2 });
+        await battle.assignImmortalsToBattle(tokens, { from: immortal_2 });
+        persiansBP = await battle.getPersiansBattlePoints.call();
+        assert(expectedPersiansBP.equals(persiansBP), 'immortals battle points are not calculated correctly. Expected: ' + expectedPersiansBP + ' -- Found: ' + persiansBP);
+
         //Adding persians or immortals to the battle don't impact the greeks army
         let expectedGreeksBP = web3.toBigNumber(0);
         let greeksBP = await battle.getGreeksBattlePoints.call();
-        assert(greeksBP.equals(expectedGreeksBP), 'spartans army should have 0 battle points');
-
-        //TODO ADD GREEKS CHECKS
+        assert(greeksBP.equals(expectedGreeksBP), 'greeks army should have 0 battle points');
 
         //Adding spartans or athenians to the battle don't impact the persian army
-        await spartans.approve(battle.address, 100, { from: all_warriors_1 });
-        await battle.assignSpartansToBattle(100, { from: all_warriors_1 });
+        let greeksInTheField = 100;
+        await spartans.approve(battle.address, greeksInTheField, { from: all_warriors_1 });
+        await battle.assignSpartansToBattle(greeksInTheField, { from: all_warriors_1 });
         assert(expectedPersiansBP.equals(persiansBP), 'found spartans intruders in the persians army! Expected: ' + expectedPersiansBP + ' -- Found: ' + persiansBP);
-        await athenians.approve(battle.address, 100, { from: all_warriors_1 });
-        await battle.assignAtheniansToBattle(100, { from: all_warriors_1 });
+        await athenians.approve(battle.address, greeksInTheField, { from: all_warriors_1 });
+        await battle.assignAtheniansToBattle(greeksInTheField, { from: all_warriors_1 });
         assert(expectedPersiansBP.equals(persiansBP), 'found spartans intruders in the persians army! Expected: ' + expectedPersiansBP + ' -- Found: ' + persiansBP);
+        let currentGreeksBP = await battle.getGreeksBattlePoints.call();
+
+        //Assign 150 spartans to battle
+        tokens = web3.toBigNumber(150).mul(D18);
+        expectedGreeksBP = tokens.mul(BP_SPARTAN).plus(currentGreeksBP);
+        await spartans.approve(battle.address, tokens, { from: spartan_1 });
+        await battle.assignSpartansToBattle(tokens, { from: spartan_1 });
+        greeksBP = await battle.getGreeksBattlePoints.call();
+        assert(expectedGreeksBP.equals(greeksBP), 'greeks battle points are not calculated correctly. Expected: ' + expectedGreeksBP + ' -- Found: ' + greeksBP);
+
+        //Assign other 50 spartans to battle
+        tokens = web3.toBigNumber(50).mul(D18);
+        expectedGreeksBP = expectedGreeksBP.plus(tokens.mul(BP_SPARTAN));
+        await spartans.approve(battle.address, tokens, { from: spartan_2 });
+        await battle.assignSpartansToBattle(tokens, { from: spartan_2 });
+        greeksBP = await battle.getGreeksBattlePoints.call();
+        assert(expectedGreeksBP.equals(greeksBP), 'greeks battle points are not calculated correctly. Expected: ' + expectedGreeksBP + ' -- Found: ' + greeksBP);
+
+        //Assign 20 athenians: their force is added to the greek side.
+        tokens = web3.toBigNumber(20).mul(D18);
+        expectedGreeksBP = expectedGreeksBP.plus(tokens.mul(BP_ATHENIAN));
+        await athenians.approve(battle.address, tokens, { from: athenian_1 });
+        await battle.assignAtheniansToBattle(tokens, { from: athenian_1 });
+        greeksBP = await battle.getGreeksBattlePoints.call();
+        assert(expectedGreeksBP.equals(greeksBP), 'greeks battle points are not calculated correctly. Expected: ' + expectedGreeksBP + ' -- Found: ' + greeksBP);
+
+        //Assign 10 athenians: their force is added to the greek side.
+        tokens = web3.toBigNumber(10).mul(D18);
+        expectedGreeksBP = expectedGreeksBP.plus(tokens.mul(BP_ATHENIAN));
+        await athenians.approve(battle.address, tokens, { from: athenian_2 });
+        await battle.assignAtheniansToBattle(tokens, { from: athenian_2 });
+        greeksBP = await battle.getGreeksBattlePoints.call();
+        assert(expectedGreeksBP.equals(greeksBP), 'greeks battle points are not calculated correctly. Expected: ' + expectedGreeksBP + ' -- Found: ' + greeksBP);
+
+        //Adding spartans or athenians to the battle don't impact the persian army
+        persiansBP = await battle.getPersiansBattlePoints.call();
+        assert(persiansBP.equals(expectedPersiansBP), 'spartans army should have ' + expectedPersiansBP + ' battle points, but they have ' + persiansBP + ' battle points');
+    });
+
+    it('battle should be ended', async function () {
+        await battle.setTime(NOW, 0, 0);
+        let ended = await battle.isEnded();
+        assert(ended, 'The battle should be ended');
+    });
+
+    it('Greeks should have won', async function () {
+        let winningFaction = await battle.getWinningFaction();
+        assert.equal(winningFaction, 'Greeks', 'Greeks should have won');
+    });
+
+    it('players should not be able to add warriors when battle is over', async function () {
+        let warriors = 100;
+        await persians.approve(battle.address, warriors, { from: all_warriors_1 });
+        await immortals.approve(battle.address, warriors, { from: all_warriors_1 });
+        await spartans.approve(battle.address, warriors, { from: all_warriors_1 });
+        await athenians.approve(battle.address, warriors, { from: all_warriors_1 });
+
+        try {
+            await battle.assignPersiansToBattle(warriors, { from: all_warriors_1 });
+            assert.fail("it should have thrown an exception because the battle is over.");
+        } catch (error) {
+            assertJump(error);
+        }
+
+        try {
+            await battle.assignImmortalsToBattle(warriors, { from: all_warriors_1 });
+            assert.fail("it should have thrown an exception because the battle is over.");
+        } catch (error) {
+            assertJump(error);
+        }
+
+        try {
+            await battle.assignSpartansToBattle(warriors, { from: all_warriors_1 });
+            assert.fail("it should have thrown an exception because the battle is over.");
+        } catch (error) {
+            assertJump(error);
+        }
+
+        try {
+            await battle.assignAtheniansToBattle(warriors, { from: all_warriors_1 });
+            assert.fail("it should have thrown an exception because the battle is over.");
+        } catch (error) {
+            assertJump(error);
+        }
+    });
+
+    it('players should be able to retrieve their own survived spartans and their new persian slaves', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('players should be able to retrieve their own survived persians and their new spartan slaves', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('players can retrieve their own immortals', async function () {
+        let player = immortal_1;
+        let lastImmortalsBalance = await immortals.balanceOf.call(player);
+        let lastImmortalsOnBattleField = await battle.getImmortalsOnTheBattlefield.call(player);
+        let retrieved = await battle.retrieveImmortals({ from: player });
+        assert(retrieved, 'immortals should have been retrieved from the battlefield');
+        let immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield.call(player);
+        assert.equal(0, immortalsOnTheBattlefield, 'all player\'s immortals should have left the battlefield');
+        let currentImmortalsBalance = await immortals.balanceOf.call(player);
+        assert(lastImmortalsBalance.plus(lastImmortalsOnBattleField).equals(currentImmortalsBalance), 'immortals should have been returned to the correct player');
+
+        player = immortal_2;
+        lastImmortalsBalance = await immortals.balanceOf.call(player);
+        lastImmortalsOnBattleField = await battle.getImmortalsOnTheBattlefield.call(player);
+        retrieved = await battle.retrieveImmortals({ from: player });
+        assert(retrieved, 'immortals should have been retrieved from the battlefield');
+        immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield.call(player);
+        assert.equal(0, immortalsOnTheBattlefield, 'all player\'s immortals should have left the battlefield');
+        currentImmortalsBalance = await immortals.balanceOf.call(player);
+        assert(lastImmortalsBalance.plus(lastImmortalsOnBattleField).equals(currentImmortalsBalance), 'immortals should have been returned to the correct player');
+
+        //player has already retrieved his immortals
+        try {
+            await battle.retrieveImmortals({ from: player });
+            assert.fail("it should have thrown an exception because player has not immortals to retrieve anymore");
+        } catch (error) {
+            assertJump(error);
+        }
+
+        player = persian_1;
+        //This player has not sent any immortals
+        try {
+            await battle.retrieveImmortals({ from: player });
+            assert.fail("it should have thrown an exception because player has not sent any immortals to the battlefield");
+        } catch (error) {
+            assertJump(error);
+        }
+    });
+
+    it('players can retrieve their own athenians', async function () {
+        let player = athenian_1;
+        let lastAtheniansBalance = await athenians.balanceOf.call(player);
+        let lastAtheniansOnBattleField = await battle.getAtheniansOnTheBattlefield.call(player);
+        let retrieved = await battle.retrieveAthenians({ from: player });
+        assert(retrieved, 'athenians should have been retrieved from the battlefield');
+        let atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield.call(player);
+        assert.equal(0, atheniansOnTheBattlefield, 'all player\'s athenians should have left the battlefield');
+        let currentAtheniansBalance = await athenians.balanceOf.call(player);
+        assert(lastAtheniansBalance.plus(lastAtheniansOnBattleField).equals(currentAtheniansBalance), 'athenians should have been returned to the correct player');
+
+        player = athenian_2;
+        lastAtheniansBalance = await athenians.balanceOf.call(player);
+        lastAtheniansOnBattleField = await battle.getAtheniansOnTheBattlefield.call(player);
+        retrieved = await battle.retrieveAthenians({ from: player });
+        assert(retrieved, 'athenians should have been retrieved from the battlefield');
+        atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield.call(player);
+        assert.equal(0, atheniansOnTheBattlefield, 'all player\'s athenians should have left the battlefield');
+        currentAtheniansBalance = await athenians.balanceOf.call(player);
+        assert(lastAtheniansBalance.plus(lastAtheniansOnBattleField).equals(currentAtheniansBalance), 'athenians should have been returned to the correct player');
+
+        //player has already retrieved his athenians
+        try {
+            await battle.retrieveAthenians({ from: player });
+            assert.fail("it should have thrown an exception because player has not athenians to retrieve anymore");
+        } catch (error) {
+            assertJump(error);
+        }
+
+        player = persian_1;
+        //This player has not sent any athenians
+        try {
+            await battle.retrieveAthenians({ from: player });
+            assert.fail("it should have thrown an exception because player has not sent any athenians to the battlefield");
+        } catch (error) {
+            assertJump(error);
+        }
     });
 
     it('battle is still in progress', function () {
@@ -162,14 +339,14 @@ contract('Battle', function (accounts) {
         });
     });
 
-    it('Persians win!', function () {
+    it('Persians won!', function () {
         Battle.new(YESTERDAY, 3600 * 1, 15, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
             instance.setPersiansWin();
             instance.getWinningFaction().then(function (result) { assert(result == "Persians"); });
         });
     });
 
-    it('Greeks win!', function () {
+    it('Greeks won!', function () {
         Battle.new(YESTERDAY, 3600 * 1, 15, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
             instance.setGreeksWin();
             instance.getWinningFaction().then(function (result) { assert(result == "Greeks"); });

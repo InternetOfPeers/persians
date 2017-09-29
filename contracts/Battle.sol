@@ -145,26 +145,50 @@ contract Battle is Timed {
 
     /*** DAPP HELPERS AND CONSTANT FUNCTIONS ***/
 
-    function getPersiansBattlePoints() constant returns (uint _battlePoints) {
+    function getPersiansOnTheBattlefield(address _player) constant returns (uint persiansOnTheBattlefield) {
+        return warriors[_player][persians];
+    }
+
+    function getImmortalsOnTheBattlefield(address _player) constant returns (uint immortalsOnTheBattlefield) {
+        return warriors[_player][immortals];
+    }
+
+    function getSpartansOnTheBattlefield(address _player) constant returns (uint spartansOnTheBattlefield) {
+        return warriors[_player][spartans];
+    }
+
+    function getAtheniansOnTheBattlefield(address _player) constant returns (uint atheniansOnTheBattlefield) {
+        return warriors[_player][athenians];
+    }
+
+    function getPersiansBattlePoints() constant returns (uint battlePoints) {
         return ((warriorsOnTheBattlefield[persians]) + (warriorsOnTheBattlefield[immortals] * 10**18 * 100));
     }
 
-    function getGreeksBattlePoints() constant returns (uint _battlePoints) {
+    function getGreeksBattlePoints() constant returns (uint battlePoints) {
         return ((warriorsOnTheBattlefield[spartans] * 1000) + (warriorsOnTheBattlefield[athenians] * 100));
     }
 
     // This method returns sensible values for two combinations of parameters: (persians, spartans) and (spartans, persians)
-    function getSlaves(address _player, address _winningFaction, address _looserFaction) constant returns (uint256 _slaves) {
+    function getSlaves(address _player, address _winningFaction, address _looserFaction) constant returns (uint256 slaves) {
         return ((_winningFaction == persians && _looserFaction == spartans) || (_winningFaction == spartans && _looserFaction == persians)) ?
             (warriorsOnTheBattlefield[_looserFaction] - (warriorsOnTheBattlefield[_looserFaction] / 10)) / (warriorsOnTheBattlefield[_winningFaction] / warriors[_player][_winningFaction]) : 0;
     }
+    
+    function isInProgress() constant returns (bool inProgress) {
+        return !isTimeExpired();        
+    }
 
-    function isDraw() constant returns (bool _draw) {
+    function isEnded() constant returns (bool ended) {
+        return isTimeExpired();
+    }
+
+    function isDraw() constant returns (bool draw) {
         return (getPersiansBattlePoints() == getGreeksBattlePoints());
     }
-    
-    function getWinningFaction() constant returns (string _winningFaction) {
-        if (!isTimePassed()) {
+
+    function getWinningFaction() constant returns (string winningFaction) {
+        if (!isTimeExpired()) {
             return "The battle is still in progress";
         }
         if (isDraw()) {
@@ -173,7 +197,12 @@ contract Battle is Timed {
         return getPersiansBattlePoints() > getGreeksBattlePoints() ? "Persians" : "Greeks";
     }
 
-    /**** DEV FUNCTIONS ******/
+    /****           DEV FUNCTIONS               *******/
+    /**** REMOVE THESE FUNCTIONS BEFORE DEPLOY  *******/
+    /**** REMOVE THESE FUNCTIONS BEFORE DEPLOY  *******/
+    /**** REMOVE THESE FUNCTIONS BEFORE DEPLOY  *******/
+    /**** REMOVE THESE FUNCTIONS BEFORE DEPLOY  *******/
+    /****             REALLY!                   *******/
 
     function setTime(uint256 _startTime, uint256 life, uint8 _avarageBlockTime) {
         startTime = _startTime;
