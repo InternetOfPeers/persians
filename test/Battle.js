@@ -33,31 +33,31 @@ contract('Battle', function (accounts) {
     var battle, persians, immortals, spartans, athenians;
 
     before("distribute all tokens and deploy battle contract", function () {
-        return SimpleToken.new("Persian", "PRS", 18, 300000 * D18).then(function (instance) {
+        return SimpleToken.new("Persian", "PRS", 18, 300000 * D18 + 100000 * D18).then(function (instance) {
             persians = instance;
             persians.transfer(persian_1, 150000 * D18);
             persians.transfer(persian_2, 120000 * D18);
-            return persians.transfer(all_warriors_1, 30000 * D18);
+            return persians.transfer(all_warriors_1, 30000 * D18 + 100000 * D18);
         }).then(function () {
-            return SimpleToken.new("Immortal", "IMT", 0, 100).then(function (instance) {
+            return SimpleToken.new("Immortal", "IMT", 0, 100 + 100).then(function (instance) {
                 immortals = instance;
                 immortals.transfer(immortal_1, 50);
                 immortals.transfer(immortal_2, 40)
-                return immortals.transfer(all_warriors_1, 10);;
+                return immortals.transfer(all_warriors_1, 10 + 100);
             })
         }).then(function () {
-            return SimpleToken.new("Spartan", "300", 18, 300 * D18).then(function (instance) {
+            return SimpleToken.new("Spartan", "300", 18, 300 * D18 + 100 * D18).then(function (instance) {
                 spartans = instance;
                 spartans.transfer(spartan_1, 150 * D18);
                 spartans.transfer(spartan_2, 120 * D18);
-                return spartans.transfer(all_warriors_1, 30 * D18);
+                return spartans.transfer(all_warriors_1, 30 * D18 + 100 * D18);
             })
         }).then(function () {
-            return SimpleToken.new("Athenian", "100", 18, 100 * D18).then(function (instance) {
+            return SimpleToken.new("Athenian", "100", 18, 100 * D18 + 100 * D18).then(function (instance) {
                 athenians = instance;
                 athenians.transfer(athenian_1, 50 * D18);
                 athenians.transfer(athenian_2, 40 * D18);
-                return athenians.transfer(all_warriors_1, 10 * D18);
+                return athenians.transfer(all_warriors_1, 10 * D18 + 100 * D18);
             })
         }).then(function () {
             let startBattle = NOW;
@@ -182,7 +182,42 @@ contract('Battle', function (accounts) {
     });
 
     it('can\'t assign too much troops to the battlefield', async function() {
-        assert(false, 'TO BE IMPLEMENTED');
+        let tooMuchPersians = 900000 * D18;
+        let tooMuchImmortals = 900;
+        let tooMuchSpartans = 900 * D18;
+        let tooMuchAthenians = 900 * D18;
+        await persians.approve(battle.address, tooMuchPersians, { from: all_warriors_1 });
+        await immortals.approve(battle.address, tooMuchImmortals, { from: all_warriors_1 });
+        await spartans.approve(battle.address, tooMuchSpartans, { from: all_warriors_1 });
+        await athenians.approve(battle.address, tooMuchAthenians, { from: all_warriors_1 });
+
+        try {
+            await battle.assignPersiansToBattle(tooMuchPersians, { from: all_warriors_1 });
+            assert.fail("it should have thrown an exception because too much warriors have been assigned to battlefiled.");
+        } catch (error) {
+            assertJump(error);
+        }
+
+        try {
+            await battle.assignImmortalsToBattle(tooMuchImmortals, { from: all_warriors_1 });
+            assert.fail("it should have thrown an exception because too much warriors have been assigned to battlefiled.");
+        } catch (error) {
+            assertJump(error);
+        }
+
+        try {
+            await battle.assignSpartansToBattle(tooMuchSpartans, { from: all_warriors_1 });
+            assert.fail("it should have thrown an exception because too much warriors have been assigned to battlefiled.");
+        } catch (error) {
+            assertJump(error);
+        }
+
+        try {
+            await battle.assignAtheniansToBattle(tooMuchAthenians, { from: all_warriors_1 });
+            assert.fail("it should have thrown an exception because too much warriors have been assigned to battlefiled.");
+        } catch (error) {
+            assertJump(error);
+        }
     });
 
     it('battle should be ended', async function () {
@@ -232,11 +267,47 @@ contract('Battle', function (accounts) {
         }
     });
 
-    it('players should be able to retrieve their own survived spartans and their new persian slaves', async function () {
+    it('should retrieve survived persians and spartan slaves', async function () {
         assert(false, 'TO BE IMPLEMENTED');
     });
 
-    it('players should be able to retrieve their own survived persians and their new spartan slaves', async function () {
+    it('should retrieve survived immortals and spartan slaves', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('should retrieve survived persians, immortals and spartan slaves', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('should retrieve survived spartans and persian slaves', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('should retrieve survived athenians and persian slaves', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('should retrieve survived spartans, athenians and persian slaves', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('can\'t redeem persians twice', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('can\'t redeem immortals twice', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('can\'t redeem spartans twice', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('can\'t redeem athenians twice', async function () {
+        assert(false, 'TO BE IMPLEMENTED');
+    });
+
+    it('can\'t redeem slaves twice', async function () {
         assert(false, 'TO BE IMPLEMENTED');
     });
 
