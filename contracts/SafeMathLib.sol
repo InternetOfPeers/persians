@@ -1,36 +1,91 @@
 pragma solidity ^0.4.13;
 
 /**
- * @title Improved SafeMath from https://github.com/OpenZeppelin/zeppelin-solidity/blob/0b9afefa9363df0f00e85057a530c83ca3b9a529/contracts/math/SafeMath.sol
+ * @title Improved DSMath
  * @dev Math operations with safety checks that throw on error
  */
 library SafeMathLib {
 
-    function mul(uint256 a, uint256 b) internal constant returns (uint256) {
-        uint256 c = a * b;
-        assert(a == 0 || c / a == b);
-        return c;
+    uint constant WAD = 10 ** 18;
+    uint constant RAY = 10 ** 27;
+
+    function add(uint x, uint y) internal returns (uint z) {
+        require((z = x + y) >= x);
     }
 
-    function div(uint256 a, uint256 b) internal constant returns (uint256) {
-        // assert(b > 0); // Solidity automatically throws when dividing by 0
-        uint256 c = a / b;
-        // assert(a == b * c + a % b); // There is no case in which this doesn't hold
-        return c;
+    function sub(uint x, uint y) internal returns (uint z) {
+        require((z = x - y) <= x);
     }
 
-    function sub(uint256 a, uint256 b) internal constant returns (uint256) {
-        assert(b <= a);
-        return a - b;
+    function mul(uint x, uint y) internal returns (uint z) {
+        require(y == 0 || (z = x * y) / y == x);
     }
 
-    function add(uint256 a, uint256 b) internal constant returns (uint256) {
-        uint256 c = a + b;
-        assert(c >= a);
-        return c;
+    function per(uint x, uint y) internal constant returns (uint z) {
+        return mul((x / 100), y);
     }
 
-    function per(uint256 a, uint256 b) internal constant returns (uint256) {
-        return mul(div(a, 100), b);
+    function min(uint x, uint y) internal returns (uint z) {
+        return x <= y ? x : y;
     }
+
+    function max(uint x, uint y) internal returns (uint z) {
+        return x >= y ? x : y;
+    }
+
+    function imin(int x, int y) internal returns (int z) {
+        return x <= y ? x : y;
+    }
+
+    function imax(int x, int y) internal returns (int z) {
+        return x >= y ? x : y;
+    }
+
+    function wmul(uint x, uint y) internal returns (uint z) {
+        z = add(mul(x, y), WAD / 2) / WAD;
+    }
+
+    function rmul(uint x, uint y) internal returns (uint z) {
+        z = add(mul(x, y), RAY / 2) / RAY;
+    }
+
+    function wdiv(uint x, uint y) internal returns (uint z) {
+        z = add(mul(x, WAD), y / 2) / y;
+    }
+
+    function rdiv(uint x, uint y) internal returns (uint z) {
+        z = add(mul(x, RAY), y / 2) / y;
+    }
+
+    function wper(uint x, uint y) internal constant returns (uint z) {
+        return wmul(wdiv(x, 100), y);
+    }
+
+    // This famous algorithm is called "exponentiation by squaring"
+    // and calculates x^n with x as fixed-point and n as regular unsigned.
+    //
+    // It's O(log n), instead of O(n) for naive repeated multiplication.
+    //
+    // These facts are why it works:
+    //
+    //  If n is even, then x^n = (x^2)^(n/2).
+    //  If n is odd,  then x^n = x * x^(n-1),
+    //   and applying the equation for even x gives
+    //    x^n = x * (x^2)^((n-1) / 2).
+    //
+    //  Also, EVM division is flooring and
+    //    floor[(n-1) / 2] = floor[n / 2].
+    //
+    function rpow(uint x, uint n) internal returns (uint z) {
+        z = n % 2 != 0 ? x : RAY;
+
+        for (n /= 2; n != 0; n /= 2) {
+            x = rmul(x, x);
+
+            if (n % 2 != 0) {
+                z = rmul(z, x);
+            }
+        }
+    }
+
 }
