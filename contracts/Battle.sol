@@ -30,7 +30,6 @@ contract Battle is Timed {
 
     mapping (address => mapping (address => uint))   public  warriorsByPlayer;               // Troops currently allocated by each player
     mapping (address => uint)                        public  warriorsOnTheBattlefield;       // Total troops fighting in the battle
-    mapping (address => uint)                        public  warriorsIntoAde;                // Total casualties, increased after each warriors redeem
 
     event WarriorsAssignedToBattlefield (address indexed _from, address _faction, uint _battlePointsIncrementForecast);
     event WarriorsBackToHome            (address indexed _to, address _faction, uint _survivedWarriors);
@@ -113,8 +112,9 @@ contract Battle is Timed {
             //Greeks won, send back Persian slaves
             uint persianSlaves = computeSlaves(msg.sender, persians);
             if (persianSlaves > 0) {
-                // Send back Spartan slaves
+                // Send back Persians slaves
                 sendWarriors(msg.sender, persians, persianSlaves);
+                
             }
             // Send back Spartans but casualties
             retrieveWarriors(msg.sender, spartans, BATTLE_CASUALTIES);
@@ -139,9 +139,7 @@ contract Battle is Timed {
         if (warriorsByPlayer[_player][_faction] > 0) {
             uint _warriors = warriorsByPlayer[_player][_faction];
             if (_deadPercentage > 0) {
-                uint _deadWarriors = _warriors.wper(_deadPercentage);
-                warriorsIntoAde[_faction] = warriorsIntoAde[_faction].add(_deadWarriors);
-                _warriors = _warriors.sub(_deadWarriors);
+                _warriors = _warriors.sub(_warriors.wper(_deadPercentage));
             }
             warriorsByPlayer[_player][_faction] = 0;
             sendWarriors(_player, _faction, _warriors);
@@ -197,10 +195,6 @@ contract Battle is Timed {
 
     function getTotalSlaves(address _faction) constant returns (uint slaves) {
         return warriorsOnTheBattlefield[_faction].sub(warriorsOnTheBattlefield[_faction].wper(BATTLE_CASUALTIES));
-    }
-
-    function getDeadWarriors(address _faction) constant returns (uint deadWarriors) {
-        return warriorsIntoAde[_faction];
     }
 
     function isInProgress() constant returns (bool inProgress) {
