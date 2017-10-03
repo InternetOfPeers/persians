@@ -21,12 +21,12 @@ contract Battle is Timed {
     uint8   public constant BP_ATHENIAN             = 100;              // Each Athenians worths 100 Battle Points
 
     uint8   public constant BATTLE_POINT_DECIMALS   = 18;
-    uint8   public constant BATTLE_CASUALTIES       = 10;               //Percentage of Persian and Spartan casualties
+    uint8   public constant BATTLE_CASUALTIES       = 10;               // Percentage of Persian and Spartan casualties
     
-    address public persians;
-    address public immortals;
-    address public spartans;
-    address public athenians;
+    address public persians;                                            // Address of the Persian Tokens
+    address public immortals;                                           // Address of the Immortal Tokens
+    address public spartans;                                            // Address of the 300 Tokens
+    address public athenians;                                           // Address of the Athenian Tokens
 
     mapping (address => mapping (address => uint))   public  warriorsByPlayer;               // Troops currently allocated by each player
     mapping (address => uint)                        public  warriorsOnTheBattlefield;       // Total troops fighting in the battle
@@ -48,8 +48,7 @@ contract Battle is Timed {
     
     Persians and Spartans are main troops.
 
-    Immortals and Athenians are support troops: there will be no casualties in their row, and they can
-    be retrieved without losses by original senders.
+    Immortals and Athenians are support troops: there will be no casualties in their row, and they will be retrieved without losses by original senders.
     
     Only Persians and Spartans can be slaves. Immortals and Athenians WILL NOT be sent back as slaves to winners.
 
@@ -219,12 +218,12 @@ contract Battle is Timed {
         return getPersiansBattlePoints() > getGreeksBattlePoints() ? "Persians" : "Greeks";
     }
 
-    /****           DEV FUNCTIONS               *******/
-    /**** REMOVE THESE FUNCTIONS BEFORE DEPLOY  *******/
-    /**** REMOVE THESE FUNCTIONS BEFORE DEPLOY  *******/
-    /**** REMOVE THESE FUNCTIONS BEFORE DEPLOY  *******/
-    /**** REMOVE THESE FUNCTIONS BEFORE DEPLOY  *******/
-    /****             REALLY!                   *******/
+    /****           DEV FUNCTIONS                   *******/
+    /**** REMOVE FOLLOWING FUNCTIONS BEFORE DEPLOY  *******/
+    /**** REMOVE FOLLOWING FUNCTIONS BEFORE DEPLOY  *******/
+    /**** REMOVE FOLLOWING FUNCTIONS BEFORE DEPLOY  *******/
+    /**** REMOVE FOLLOWING FUNCTIONS BEFORE DEPLOY  *******/
+    /****             REALLY!                       *******/
 
     function setTime(uint _startTime, uint life, uint8 _avarageBlockTime) {
         startTime = _startTime;
@@ -232,26 +231,5 @@ contract Battle is Timed {
         avarageBlockTime = _avarageBlockTime;
     }
     
-    function setPersiansWin() {
-        warriorsOnTheBattlefield[persians] = 3000 * 10**18;  //3000
-        warriorsOnTheBattlefield[immortals] = 2; //200
-        warriorsOnTheBattlefield[spartans] = 2 * 10**18; //2000
-        warriorsOnTheBattlefield[athenians] = 3 * 10**18; //300
-    }
-
-    function setGreeksWin() {
-        warriorsOnTheBattlefield[persians] = 300 * 10**18;  //300
-        warriorsOnTheBattlefield[immortals] = 2; //200
-        warriorsOnTheBattlefield[spartans] = 27003 * 10**14; //2700.3
-        warriorsOnTheBattlefield[athenians] = 3 * 10**18; //300
-    }
-
-    function setDraw() {
-        warriorsOnTheBattlefield[persians] = 2200 * 10**18;  //2200
-        warriorsOnTheBattlefield[immortals] = 2; //200
-        warriorsOnTheBattlefield[spartans] = 2 * 10**18; //2000
-        warriorsOnTheBattlefield[athenians] = 4 * 10**18; //400
-    }
-
     event Debug (uint value);
 }
