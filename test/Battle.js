@@ -328,10 +328,10 @@ contract('Battle', function (accounts) {
         assert(spartanSlaves.equals(188.1 * WAD), 'Spartan slaves should be 188,1 (209 - 20,9), found ' + spartanSlaves);
         assert(persiansBP.equals(208711 * WAD), 'Persians BP should be 208.711 (205.011 + 3.700), found ' + persiansBP);
         assert(greeksBP.equals(212909 * WAD), 'Greeks BP should be 212.909 (209.000 + 3.909, found ' + greeksBP);
-        assert.equal(winningFaction, 'Greeks', 'Greeks should have won');
+        assert.equal(winningFaction, 'Greeks', 'Greeks should have won. Winning faction: '+ winningFaction);
     });
 
-    it('Greeks won! > Should retrieve survived Spartan warriors and Persian slaves', async function () {
+    it('Greeks won! > Should redeem survived Spartan warriors and Persian slaves', async function () {
         let player = spartan_1;
         // Check balances
         let currentSpartansBalance = await spartans.balanceOf(player);
@@ -405,7 +405,7 @@ contract('Battle', function (accounts) {
         assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
     });
 
-    it('Greeks won! > Should retrieve all Athenians and Persian slaves', async function () {
+    it('Greeks won! > Should redeem all Athenians and Persian slaves', async function () {
         let player = athenian_1;
         // Check balances
         let currentAtheniansBalance = await athenians.balanceOf(player);
@@ -483,7 +483,7 @@ contract('Battle', function (accounts) {
         assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
     });
 
-    it('Greeks won! > Should retrieve survived Spartans, Persian slaves, all Athenians and all Immortals', async function () {
+    it('Greeks won! > Should redeem survived Spartans, Persian slaves, all Athenians and all Immortals', async function () {
         let player = all_warriors_1;
         // Check balances        
         let currentSpartansBalance = await spartans.balanceOf(player);
@@ -742,10 +742,10 @@ contract('Battle', function (accounts) {
         assert(spartanSlaves.equals(188.1 * WAD), 'Spartan slaves should be 188,1 (209 - 20,9), found ' + spartanSlaves);
         assert(persiansBP.equals(231822 * WAD), 'Persians BP should be 231.822 (228.122 + 3.700), found ' + persiansBP);
         assert(greeksBP.equals(212909 * WAD), 'Greeks BP should be 212.909 (209.000 + 3.909, found ' + greeksBP);
-        assert.equal(winningFaction, 'Persians', 'Persians should have won');
+        assert.equal(winningFaction, 'Persians', 'Persians should have won. Winning faction: '+ winningFaction);
     });
     
-    it('Persians won! > Should retrieve survived Persian warriors and Persian slaves', async function () {
+    it('Persians won! > Should redeem survived Persian warriors and Spartan slaves', async function () {
         let player = persian_1;
         // Check balances
         let currentPersiansBalance = await persians.balanceOf(player);
@@ -793,9 +793,9 @@ contract('Battle', function (accounts) {
         assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
     });
 
-    it('Persians won! > Can\'t redeem Spartan warriors and Persian slaves twice', async function () {
+    it('Persians won! > Can\'t redeem Persian warriors and Spartan slaves twice', async function () {
         let player = persian_1;
-        // Redeem warriors again        
+        // Redeem warriors again
         let redeem = await battle.redeemWarriors({ from: player });
         assert(redeem, 'Redeem failed');
         // Check new balances, nothing should have changed
@@ -819,7 +819,7 @@ contract('Battle', function (accounts) {
         assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
     });
 
-    it('Persians won! > Should retrieve all Immortals and Spartan slaves', async function () {
+    it('Persians won! > Should redeem all Immortals and Spartan slaves', async function () {
         let player = immortal_1;
         // Check balances
         let currentImmortalsBalance = await immortals.balanceOf(player);
@@ -897,7 +897,7 @@ contract('Battle', function (accounts) {
         assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
     });
 
-    it('Persians won! > Should retrieve survived Persians, Spartan slaves, all Immortals and all Athenians', async function () {
+    it('Persians won! > Should redeem survived Persians, Spartan slaves, all Immortals and all Athenians', async function () {
         let player = all_warriors_1;
         // Check balances        
         let currentPersiansBalance = await persians.balanceOf(player);
@@ -962,7 +962,7 @@ contract('Battle', function (accounts) {
         assert(currentImmortalsBalance.equals(110), player + ' should have 110 Immortals, found ' + currentImmortalsBalance);
         assert(currentAtheniansBalance.equals(110 * WAD), player + ' should have 110 Athenians, found ' + currentAtheniansBalance);
         assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
-        assert(spartansOnTheBattlefield.equals(4 * WAD), player + ' should have 0 Spartans (dead) on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(spartansOnTheBattlefield.equals(4 * WAD), player + ' should have 4 Spartans (dead) on the battlefield, found ' + spartansOnTheBattlefield);
         assert(immortalsOnTheBattlefield.equals(0), player + ' should have 0 Immortals on the battlefield, found ' + immortalsOnTheBattlefield);
         assert(atheniansOnTheBattlefield.equals(0), player + ' should have 0 Athenians on the battlefield, found ' + atheniansOnTheBattlefield);
         assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
@@ -1061,9 +1061,9 @@ contract('Battle', function (accounts) {
     /*** SCENARIO 3 - It's a draw!   *********************************************
 
     Current battlefield:
-        205.011 Persians        205.011 BP
+        209.209 Persians        209.209 BP
              37 Immortals         3.700 BP
-                                208.011 BP
+                                212.909 BP
 
             209 Spartans        209.000 BP
           39.09 Athenians         3.909 BP
@@ -1071,7 +1071,7 @@ contract('Battle', function (accounts) {
             
     Troops sent:
         persian_1   150.000    Persians    (150.000 owned)
-        persian_2    55.000    Persians    (120.000 owned)
+        persian_2    59.198    Persians    (120.000 owned)
         immortal_1       20    Immortals   (     50 owned)
         immortal_2       15    Immortals   (     40 owned)
         spartan_1       150    Spartans    (    150 owned)
@@ -1086,5 +1086,456 @@ contract('Battle', function (accounts) {
         -----------------------------------------------
 
     ******************************************************************************/
+
+    it('It\'s a draw! (Set new battle and battlefield)', async function(){
+        await SimpleToken.new("Persian", "PRS", 18, 300000 * WAD + 100000 * WAD).then(function (instance) {
+            persians = instance;
+            persians.transfer(persian_1, 150000 * WAD);
+            persians.transfer(persian_2, 120000 * WAD);
+            return persians.transfer(all_warriors_1, 30000 * WAD + 100000 * WAD);
+        }).then(function () {
+            return SimpleToken.new("Immortal", "IMT", 0, 100 + 100).then(function (instance) {
+                immortals = instance;
+                immortals.transfer(immortal_1, 50);
+                immortals.transfer(immortal_2, 40)
+                return immortals.transfer(all_warriors_1, 10 + 100);
+            })
+        }).then(function () {
+            return SimpleToken.new("Spartan", "300", 18, 300 * WAD + 100 * WAD).then(function (instance) {
+                spartans = instance;
+                spartans.transfer(spartan_1, 150 * WAD);
+                spartans.transfer(spartan_2, 120 * WAD);
+                return spartans.transfer(all_warriors_1, 30 * WAD + 100 * WAD);
+            })
+        }).then(function () {
+            return SimpleToken.new("Athenian", "100", 18, 100 * WAD + 100 * WAD).then(function (instance) {
+                athenians = instance;
+                athenians.transfer(athenian_1, 50 * WAD);
+                athenians.transfer(athenian_2, 40 * WAD);
+                return athenians.transfer(all_warriors_1, 10 * WAD + 100 * WAD);
+            })
+        }).then(function () {
+            let startBattle = NOW;
+            let endBattle = startBattle + (60 * 60 * 24);
+            let avarageBlockTime = 24;
+            return Battle.new(startBattle, endBattle, avarageBlockTime, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
+                battle = instance;
+            });
+        });
+
+        await prepareBattlefield();
+
+        // Assign other 4.198 persians to battle
+        let tokens = web3.toBigNumber(4198).mul(WAD);
+        let expectedPersiansBP = web3.toBigNumber(212909).mul(WAD);
+        await persians.approve(battle.address, tokens, { from: persian_2 });
+        await battle.assignPersiansToBattle(tokens, { from: persian_2 });
+        let persiansBP = await battle.getPersiansBattlePoints();
+        assert(expectedPersiansBP.equals(persiansBP), 'Persian battle points are not calculated correctly. Expected: ' + expectedPersiansBP + ' -- Found: ' + persiansBP);
+
+        // End the battle
+        await battle.setTime(NOW, 0, 0);
+        let ended = await battle.isEnded();
+        assert(ended, 'The battle should be ended');
+
+        // Check the battlefield
+        let persiansOnTheBattlefield = await battle.warriorsOnTheBattlefield(persians.address);
+        let immortalsOnTheBattlefield = await battle.warriorsOnTheBattlefield(immortals.address);
+        let spartansOnTheBattlefield = await battle.warriorsOnTheBattlefield(spartans.address);
+        let atheniansOnTheBattlefield = await battle.warriorsOnTheBattlefield(athenians.address);
+        let persianSlaves = await battle.getTotalSlaves(persians.address);
+        let spartanSlaves = await battle.getTotalSlaves(spartans.address);
+        persiansBP = await battle.getPersiansBattlePoints();
+        let greeksBP = await battle.getGreeksBattlePoints();
+        let winningFaction = await battle.getWinningFaction();
+        assert(persiansOnTheBattlefield.equals(209209 * WAD), 'Persians on the battlefield should be 209.209, found ' + persiansOnTheBattlefield);
+        assert(immortalsOnTheBattlefield.equals(37), 'Immortals on the battlefield should be 37, found ' + immortalsOnTheBattlefield);
+        assert(spartansOnTheBattlefield.equals(209 * WAD), 'Spartans on the battlefield should be 209, found ' + spartansOnTheBattlefield);
+        assert(atheniansOnTheBattlefield.equals(39.09 * WAD), 'Athenians on the battlefield should be 39.09, found ' + atheniansOnTheBattlefield);
+        assert(persianSlaves.equals(188288.1 * WAD), 'Persian slaves should be 188.288,1 (209.209 - 20.920,9), found ' + persianSlaves);
+        assert(spartanSlaves.equals(188.1 * WAD), 'Spartan slaves should be 188,1 (209 - 20,9), found ' + spartanSlaves);
+        assert(persiansBP.equals(212909 * WAD), 'Persians BP should be 212.909 (209.209 + 3.700), found ' + persiansBP);
+        assert(greeksBP.equals(212909 * WAD), 'Greeks BP should be 212.909 (209.000 + 3.909, found ' + greeksBP);
+        assert.equal(winningFaction, 'The battle ended in a draw!', 'It should be a draw! It is '+ winningFaction);
+    });
+
+    it('It\'s a draw! > Should redeem survived Persian warriors without Spartan slaves', async function () {
+        let player = persian_1;
+        // Check balances
+        let currentPersiansBalance = await persians.balanceOf(player);
+        let currentSpartansBalance = await spartans.balanceOf(player);
+        let persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        let playerBP = await battle.getPersiansBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(persiansOnTheBattlefield.equals(150000 * WAD), player + ' should have 150.000 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(playerBP.equals(150000 * WAD), player + ' should have 150.000 Battle Points, found ' + playerBP);
+        // Redeem warriors
+        let redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances
+        currentPersiansBalance = await persians.balanceOf(player);
+        currentSpartansBalance = await spartans.balanceOf(player);
+        persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        playerBP = await battle.getPersiansBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(135000 * WAD), player + ' should have 135.000 Persians (150.000 - 10% dead = 135.000 survivors), found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+
+        player = persian_2;
+        // Check balances        
+        currentPersiansBalance = await persians.balanceOf(player);
+        currentSpartansBalance = await spartans.balanceOf(player);
+        persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        playerBP = await battle.getPersiansBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(60802 * WAD), player + ' should have 60.802 Persians, found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(persiansOnTheBattlefield.equals(59198 * WAD), player + ' should have 59.198 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(playerBP.equals(59198 * WAD), player + ' should have 59.198 Battle Points, found ' + playerBP);
+        // Redeem warriors
+        redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances
+        currentPersiansBalance = await persians.balanceOf(player);
+        currentSpartansBalance = await spartans.balanceOf(player);
+        persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        playerBP = await battle.getPersiansBattlePointsBy(player);
+        assert(currentPersiansBalance.greaterThan(114080.1 * WAD) && currentPersiansBalance.lessThan(114080.3 * WAD), player + ' should have 114.080,2~ Persians (60.802 + (59.198 - 10% dead = 53.278,2 survivors)), found ' + currentPersiansBalance);        
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+    });
+
+    it('It\'s a draw! > Can\'t redeem survived Persian warriors twice', async function () {
+        let player = persian_1;
+        // Redeem warriors again
+        let redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances, nothing should have changed
+        let currentPersiansBalance = await persians.balanceOf(player);
+        let currentSpartansBalance = await spartans.balanceOf(player);
+        let persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        let playerBP = await battle.getPersiansBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(135000 * WAD), player + ' should have 135.000 Persians (150.000 - 10% dead = 135.000 survivors), found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+
+        player = persian_2;
+        // Redeem warriors again
+        redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances, nothing should have changed
+        currentPersiansBalance = await persians.balanceOf(player);
+        currentSpartansBalance = await spartans.balanceOf(player);
+        persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        playerBP = await battle.getPersiansBattlePointsBy(player);
+        assert(currentPersiansBalance.greaterThan(114080.1 * WAD) && currentPersiansBalance.lessThan(114080.3 * WAD), player + ' should have 114.080,2~ Persians (60.802 + (59.198 - 10% dead = 53.278,2 survivors)), found ' + currentPersiansBalance);        
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+    });
+
+    it('It\'s a draw! > Should redeem all Immortals without Spartan slaves', async function() {
+        let player = immortal_1;
+        // Check balances
+        let currentPersiansBalance = await persians.balanceOf(player);
+        let currentSpartansBalance = await spartans.balanceOf(player);
+        let currentImmortalsBalance = await immortals.balanceOf(player);
+        let currentAtheniansBalance = await athenians.balanceOf(player);
+        let persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        let spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        let immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield(player);
+        let atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield(player);
+        let playerBP = await battle.getPersiansBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(currentImmortalsBalance.equals(30), player + ' should have 30 Immortals, found ' + currentImmortalsBalance);
+        assert(currentAtheniansBalance.equals(0), player + ' should have 0 Athenians, found ' + currentAtheniansBalance);
+        assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(immortalsOnTheBattlefield.equals(20), player + ' should have 20 Immortals on the battlefield, found ' + immortalsOnTheBattlefield);
+        assert(atheniansOnTheBattlefield.equals(0), player + ' should have 0 Athenians on the battlefield, found ' + atheniansOnTheBattlefield);
+        assert(playerBP.equals(2000 * WAD), player + ' should have 2.000 Battle Points, found ' + playerBP);
+        // Redeem warriors
+        let redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances
+        currentPersiansBalance = await persians.balanceOf(player);
+        currentSpartansBalance = await spartans.balanceOf(player);
+        currentImmortalsBalance = await immortals.balanceOf(player);
+        currentAtheniansBalance = await athenians.balanceOf(player);
+        persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield(player);
+        atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield(player);
+        playerBP = await battle.getPersiansBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(currentImmortalsBalance.equals(50), player + ' should have 50 Immortals, found ' + currentImmortalsBalance);
+        assert(currentAtheniansBalance.equals(0), player + ' should have 0 Athenians, found ' + currentAtheniansBalance);
+        assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(immortalsOnTheBattlefield.equals(0), player + ' should have 0 Immortals on the battlefield, found ' + immortalsOnTheBattlefield);
+        assert(atheniansOnTheBattlefield.equals(0), player + ' should have 0 Athenians on the battlefield, found ' + atheniansOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+    });
+
+    it('It\'s a draw! > Can\'t redeem Immortal warriors twice', async function () {
+        let player = immortal_1;
+        // Redeem warriors again        
+        let redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances, nothing should have changed
+        let currentImmortalsBalance = await immortals.balanceOf(player);
+        let currentSpartansBalance = await spartans.balanceOf(player);
+        let immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield(player);
+        let playerBP = await battle.getPersiansBattlePointsBy(player);
+        assert(currentImmortalsBalance.equals(50), player + ' should have 50 Immortals, found ' + currentImmortalsBalance);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(immortalsOnTheBattlefield.equals(0), player + ' should have 0 Immortals on the battlefield, found ' + immortalsOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+
+        player = immortal_2;
+        // Redeem warriors again        
+        redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances, nothing should have changed
+        currentImmortalsBalance = await immortals.balanceOf(player);
+        currentSpartansBalance = await spartans.balanceOf(player);
+        immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield(player);
+        playerBP = await battle.getPersiansBattlePointsBy(player);
+        assert(currentImmortalsBalance.equals(40), player + ' should have 40 Immortals, found ' + currentImmortalsBalance);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(immortalsOnTheBattlefield.equals(0), player + ' should have 0 Immortals on the battlefield, found ' + immortalsOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+    });
+
+    it('It\'s a draw! > Should redeem survived Spartan warriors without Persian slaves', async function () {
+        let player = spartan_1;
+        // Check balances
+        let currentSpartansBalance = await spartans.balanceOf(player);
+        let currentPersiansBalance = await persians.balanceOf(player);
+        let spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        let playerBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(spartansOnTheBattlefield.equals(150 * WAD), player + ' should have 150 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(playerBP.equals(150000 * WAD), player + ' should have 150.000 Battle Points, found ' + playerBP);
+        // Redeem warriors
+        let redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances
+        currentSpartansBalance = await spartans.balanceOf(player);
+        currentPersiansBalance = await persians.balanceOf(player);
+        spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        playerBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentSpartansBalance.equals(135 * WAD), player + ' should have 135 Spartans (150 - 10% dead = 135 survivors), found ' + currentSpartansBalance);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+
+        player = spartan_2;
+        // Check balances        
+        currentSpartansBalance = await spartans.balanceOf(player);
+        currentPersiansBalance = await persians.balanceOf(player);
+        spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        playerBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentSpartansBalance.equals(65 * WAD), player + ' should have 65 Spartans, found ' + currentSpartansBalance);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(spartansOnTheBattlefield.equals(55 * WAD), player + ' should have 55 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(playerBP.equals(55000 * WAD), player + ' should have 55.000 Battle Points, found ' + playerBP);
+        // Redeem warriors
+        redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances
+        currentSpartansBalance = await spartans.balanceOf(player);
+        currentPersiansBalance = await persians.balanceOf(player);
+        spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        playerBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentSpartansBalance.equals(114.5 * WAD), player + ' should have 114.5 Spartans (65 + (55 - 10% dead = 49,5 survivors)), found ' + currentSpartansBalance);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+    });
+
+    it('It\'s a draw! > Can\'t redeem Spartan warriors twice', async function () {
+        let player = spartan_1;
+        // Redeem warriors again        
+        let redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances, nothing should have changed
+        let currentSpartansBalance = await spartans.balanceOf(player);
+        let currentPersiansBalance = await persians.balanceOf(player);
+        let spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        assert(currentSpartansBalance.equals(135 * WAD), player + ' should have 135 Spartans (150 - 10% dead = 135 survivors), found ' + currentSpartansBalance);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+
+        player = spartan_2;
+        // Redeem warriors again        
+        redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances, nothing should have changed
+        currentSpartansBalance = await spartans.balanceOf(player);
+        currentPersiansBalance = await persians.balanceOf(player);
+        spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        assert(currentSpartansBalance.equals(114.5 * WAD), player + ' should have 114,5 Spartans (65 + (55 - 10% dead = 49,5 survivors)), found ' + currentSpartansBalance);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+    });
+
+    it('It\'s a draw! > Should redeem all Athenians without Persian slaves', async function() {
+        let player = athenian_1;
+        // Check balances
+        let currentPersiansBalance = await persians.balanceOf(player);
+        let currentSpartansBalance = await spartans.balanceOf(player);
+        let currentImmortalsBalance = await immortals.balanceOf(player);
+        let currentAtheniansBalance = await athenians.balanceOf(player);
+        let persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        let spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        let immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield(player);
+        let atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield(player);
+        let playerBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(currentImmortalsBalance.equals(0), player + ' should have 0 Immortals, found ' + currentImmortalsBalance);
+        assert(currentAtheniansBalance.equals(30 * WAD), player + ' should have 30 Athenians, found ' + currentAtheniansBalance);
+        assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(immortalsOnTheBattlefield.equals(0), player + ' should have 0 Immortals on the battlefield, found ' + immortalsOnTheBattlefield);
+        assert(atheniansOnTheBattlefield.equals(20 * WAD), player + ' should have 20 Athenians on the battlefield, found ' + atheniansOnTheBattlefield);
+        assert(playerBP.equals(2000 * WAD), player + ' should have 2.000 Battle Points, found ' + playerBP);
+        // Redeem warriors
+        let redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances
+        currentPersiansBalance = await persians.balanceOf(player);
+        currentSpartansBalance = await spartans.balanceOf(player);
+        currentImmortalsBalance = await immortals.balanceOf(player);
+        currentAtheniansBalance = await athenians.balanceOf(player);
+        persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield(player);
+        atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield(player);
+        playerBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(0), player + ' should have 0 Spartans, found ' + currentSpartansBalance);
+        assert(currentImmortalsBalance.equals(0), player + ' should have 0 Immortals, found ' + currentImmortalsBalance);
+        assert(currentAtheniansBalance.equals(50 * WAD), player + ' should have 50 Athenians, found ' + currentAtheniansBalance);
+        assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(immortalsOnTheBattlefield.equals(0), player + ' should have 0 Immortals on the battlefield, found ' + immortalsOnTheBattlefield);
+        assert(atheniansOnTheBattlefield.equals(0), player + ' should have 0 Athenians on the battlefield, found ' + atheniansOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+    });
+
+    it('It\'s a draw! > Can\'t redeem Athenian warriors twice', async function () {
+        let player = athenian_1;
+        // Redeem warriors again        
+        let redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances, nothing should have changed
+        let currentAtheniansBalance = await athenians.balanceOf(player);
+        let currentPersiansBalance = await persians.balanceOf(player);
+        let atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield(player);
+        let playerBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentAtheniansBalance.equals(50 * WAD), player + ' should have 50 Athenians, found ' + currentAtheniansBalance);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(atheniansOnTheBattlefield.equals(0), player + ' should have 0 Athenians on the battlefield, found ' + atheniansOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+
+        player = athenian_2;
+        // Redeem warriors again        
+        redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances, nothing should have changed
+        currentAtheniansBalance = await athenians.balanceOf(player);
+        currentPersiansBalance = await persians.balanceOf(player);
+        atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield(player);
+        playerBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentAtheniansBalance.equals(40 * WAD), player + ' should have 50 Athenians, found ' + currentAtheniansBalance);
+        assert(currentPersiansBalance.equals(0), player + ' should have 0 Persians, found ' + currentPersiansBalance);
+        assert(atheniansOnTheBattlefield.equals(0), player + ' should have 0 Athenians on the battlefield, found ' + atheniansOnTheBattlefield);
+        assert(playerBP.equals(0), player + ' should have 0 Battle Points, found ' + playerBP);
+    });
+
+    it('It\'s a draw! > Should redeem survived Persians, survived Spartan, all Immortals and all Athenians', async function () {
+        let player = all_warriors_1;
+        // Check balances
+        let currentPersiansBalance = await persians.balanceOf(player);
+        let currentSpartansBalance = await spartans.balanceOf(player);
+        let currentImmortalsBalance = await immortals.balanceOf(player);
+        let currentAtheniansBalance = await athenians.balanceOf(player);
+        let persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        let spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        let immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield(player);
+        let atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield(player);
+        let playerPersiansBP = await battle.getPersiansBattlePointsBy(player);
+        let playerGreeksBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(129989 * WAD), player + ' should have 129.989 Persians, found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(126 * WAD), player + ' should have 126 Spartans, found ' + currentSpartansBalance);
+        assert(currentImmortalsBalance.equals(108), player + ' should have 108 Immortals, found ' + currentImmortalsBalance);
+        assert(currentAtheniansBalance.equals(106 * WAD), player + ' should have 106 Athenians, found ' + currentAtheniansBalance);
+        assert(persiansOnTheBattlefield.equals(11 * WAD), player + ' should have 11 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(spartansOnTheBattlefield.equals(4 * WAD), player + ' should have 4 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(immortalsOnTheBattlefield.equals(2), player + ' should have 2 Immortals on the battlefield, found ' + immortalsOnTheBattlefield);
+        assert(atheniansOnTheBattlefield.equals(4 * WAD), player + ' should have 4 Athenians on the battlefield, found ' + atheniansOnTheBattlefield);
+        assert(playerPersiansBP.equals(211 * WAD), player + ' should have 211 Battle Points (11 by Persians + 200 by Immortals), found ' + playerPersiansBP);
+        assert(playerGreeksBP.equals(4400 * WAD), player + ' should have 4400 Battle Points (4000 by Spartans + 400 by Athenians), found ' + playerGreeksBP);
+        // Redeem warriors
+        let redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances
+        currentPersiansBalance = await persians.balanceOf(player);
+        currentSpartansBalance = await spartans.balanceOf(player);
+        currentImmortalsBalance = await immortals.balanceOf(player);
+        currentAtheniansBalance = await athenians.balanceOf(player);
+        persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield(player);
+        atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield(player);
+        playerPersiansBP = await battle.getPersiansBattlePointsBy(player);
+        playerGreeksBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(129998.9 * WAD), player + ' should have 129.998,9 Persians (129989 + (11 - 10% dead = 9.9 survivors)), found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(129.6 * WAD), player + ' should have 129.6 Spartans (126 + (4 - 10% = 3.6 survivors)), found ' + currentSpartansBalance);        
+        assert(currentImmortalsBalance.equals(110), player + ' should have 110 Immortals, found ' + currentImmortalsBalance);
+        assert(currentAtheniansBalance.equals(110 * WAD), player + ' should have 110 Athenians, found ' + currentAtheniansBalance);
+        assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(immortalsOnTheBattlefield.equals(0), player + ' should have 0 Immortals on the battlefield, found ' + immortalsOnTheBattlefield);
+        assert(atheniansOnTheBattlefield.equals(0), player + ' should have 0 Athenians on the battlefield, found ' + atheniansOnTheBattlefield);
+        assert(playerPersiansBP.equals(0), player + ' should have 0 Battle Points, found ' + playerPersiansBP);
+        assert(playerGreeksBP.equals(0), player + ' should have 0 Battle Points, found ' + playerGreeksBP);
+    });
+
+    it('It\'s a draw! > Can\'t redeem survived Persians, survived Spartan, all Immortals and all Athenians twice', async function () {
+        let player = all_warriors_1;
+        // Redeem warriors again        
+        let redeem = await battle.redeemWarriors({ from: player });
+        assert(redeem, 'Redeem failed');
+        // Check new balances, nothing should have changed
+        let currentPersiansBalance = await persians.balanceOf(player);
+        let currentSpartansBalance = await spartans.balanceOf(player);
+        let currentImmortalsBalance = await immortals.balanceOf(player);
+        let currentAtheniansBalance = await athenians.balanceOf(player);
+        let persiansOnTheBattlefield = await battle.getPersiansOnTheBattlefield(player);
+        let spartansOnTheBattlefield = await battle.getSpartansOnTheBattlefield(player);
+        let immortalsOnTheBattlefield = await battle.getImmortalsOnTheBattlefield(player);
+        let atheniansOnTheBattlefield = await battle.getAtheniansOnTheBattlefield(player);
+        let playerPersiansBP = await battle.getPersiansBattlePointsBy(player);
+        let playerGreeksBP = await battle.getGreeksBattlePointsBy(player);
+        assert(currentPersiansBalance.equals(129998.9 * WAD), player + ' should have 129.998,9 Persians (129989 + (11 - 10% dead = 9.9 survivors)), found ' + currentPersiansBalance);
+        assert(currentSpartansBalance.equals(129.6 * WAD), player + ' should have 129.6 Spartans (126 + (4 - 10% = 3.6 survivors)), found ' + currentSpartansBalance);        
+        assert(currentImmortalsBalance.equals(110), player + ' should have 110 Immortals, found ' + currentImmortalsBalance);
+        assert(currentAtheniansBalance.equals(110 * WAD), player + ' should have 110 Athenians, found ' + currentAtheniansBalance);
+        assert(persiansOnTheBattlefield.equals(0), player + ' should have 0 Persians on the battlefield, found ' + persiansOnTheBattlefield);
+        assert(spartansOnTheBattlefield.equals(0), player + ' should have 0 Spartans on the battlefield, found ' + spartansOnTheBattlefield);
+        assert(immortalsOnTheBattlefield.equals(0), player + ' should have 0 Immortals on the battlefield, found ' + immortalsOnTheBattlefield);
+        assert(atheniansOnTheBattlefield.equals(0), player + ' should have 0 Athenians on the battlefield, found ' + atheniansOnTheBattlefield);
+        assert(playerPersiansBP.equals(0), player + ' should have 0 Battle Points, found ' + playerPersiansBP);
+        assert(playerGreeksBP.equals(0), player + ' should have 0 Battle Points, found ' + playerGreeksBP);
+    });
 
 });

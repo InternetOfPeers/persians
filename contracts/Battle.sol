@@ -102,7 +102,7 @@ contract Battle is Timed {
             // Persians won, compute slaves
             uint spartanSlaves = computeSlaves(msg.sender, spartans);
             if (spartanSlaves > 0) {
-                // Send back Spartan slaves
+                // Send back Spartan slaves to winner
                 sendWarriors(msg.sender, spartans, spartanSlaves);
             }
             // Send back Persians but casualties
@@ -111,11 +111,14 @@ contract Battle is Timed {
             //Greeks won, send back Persian slaves
             uint persianSlaves = computeSlaves(msg.sender, persians);
             if (persianSlaves > 0) {
-                // Send back Persians slaves
-                sendWarriors(msg.sender, persians, persianSlaves);
-                
+                // Send back Persians slaves to winner
+                sendWarriors(msg.sender, persians, persianSlaves);                
             }
             // Send back Spartans but casualties
+            retrieveWarriors(msg.sender, spartans, BATTLE_CASUALTIES);
+        } else {
+            // It's a draw, send back Persians and Spartans but casualties
+            retrieveWarriors(msg.sender, persians, BATTLE_CASUALTIES);
             retrieveWarriors(msg.sender, spartans, BATTLE_CASUALTIES);
         }
         // Send back Immortals untouched
