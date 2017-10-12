@@ -1,14 +1,65 @@
+/*******************************************************************************
+**************************     BATTLE CONTRACT v1    ***************************
+********************************************************************************
+
+Battle smart contract is a platform/ecosystem for gaming built on top of a
+decentralized smart contract, allowing anyone to use a Warrior tokens: entities
+which exists on the Ethereum Network, which can be traded or used to enter the
+battle with other Warrior tokens holders, for profit or just for fun!
+
+********************************************************************************
+**************************           RULES           ***************************
+********************************************************************************
+
+- This first battle contract accepts Persians, Spartans (300 Tokens), Immortals
+  and Athenians as warriors.
+- Every warrior token has a proper value in **Battle Point (BP)** that represent
+  his strength on the battle contract.
+- Persians and Immortals represent the Persian faction, Spartans and Athenians
+  the Greek one.
+- During the first phase players send tokens to the battle contract
+  (NOTE: before calling the proper contract's function that assigning warriors
+  to the battlefiled, players NEED TO CALL APPROVE on their token contract to
+  allow Battle contract to move their tokens.
+- Once sent, troops can't be retired form the battlefield
+- The battle will last for several days
+- When the battle period is over, following results can happpen:
+    -- When the battle ends in a draw:
+        (*) 10% of main troops of both sides lie on the ground
+        (*) 90% of them can be retrieved by each former owner
+        (*) No slaves are assigned
+    -- When the battle ends with a winning factions:
+        (*) 10% of main troops of both sides lie on the ground
+        (*) 90% of them can be retrieved by each former owner
+        (*) Surviving warriors of the loosing faction are assigned as slaves
+            to winners
+        (*) Slaves are computed based on the BP contributed by each sender
+- Persians and Spartans are main troops.
+- Immortals and Athenians are support troops: there will be no casualties in
+  their row, and they will be retrieved without losses by original senders.
+- Only Persians and Spartans can be slaves. Immortals and Athenians WILL NOT
+  be sent back as slaves to winners.
+
+********************************************************************************
+**************************      TOKEN ADDRESSES      ***************************
+********************************************************************************
+
+        0xaEc98A708810414878c3BCDF46Aad31dEd4a4557      Persians
+        0x22E5F62D0FA19974749faa194e3d3eF6d89c08d7      Immortals
+        0x163733bcc28dbf26B41a8CfA83e369b5B3af741b      Spartans
+        0x17052d51E954592C1046320c2371AbaB6C73Ef10      Athenians
+
+*******************************************************************************/
 pragma solidity ^0.4.15;
 
 import "./TokenERC20.sol";
 import "./Timed.sol";
 import "./SafeMathLib.sol";
+import "./Upgradable.sol";
 
-contract Battle is Timed {
+contract Battle is Timed, Upgradable {
     using SafeMathLib for uint;
-
-    string  public constant VERSION                 = "1.0.0";
-    
+  
     uint    public constant MAX_PERSIANS            = 300000 * 10**18;  // 300.000
     uint    public constant MAX_SPARTANS            = 300 * 10**18;     // 300
     uint    public constant MAX_IMMORTALS           = 100;              // 100
@@ -34,31 +85,7 @@ contract Battle is Timed {
     event WarriorsAssignedToBattlefield (address indexed _from, address _faction, uint _battlePointsIncrementForecast);
     event WarriorsBackToHome            (address indexed _to, address _faction, uint _survivedWarriors);
 
-    /*******************************************************************************************
-    When the battle ends in a draw:
-        (*) 10% of main troops of both sides lie on the ground
-        (*) 90% of them can be retrieved by each former owner
-        (*) No slaves are assigned
-    
-    When the battle ends with a winning factions:
-        (*) 10% of main troops of both sides lie on the ground
-        (*) 90% of them can be retrieved by each former owner
-        (*) Surviving warriors of the loosing faction are assigned as slaves to winners
-        (*) Slaves are computed based on the BP contributed by each sender
-    
-    Persians and Spartans are main troops.
-
-    Immortals and Athenians are support troops: there will be no casualties in their row, and they will be retrieved without losses by original senders.
-    
-    Only Persians and Spartans can be slaves. Immortals and Athenians WILL NOT be sent back as slaves to winners.
-
-    Main Net Addresses
-    Persians            = 0xaEc98A708810414878c3BCDF46Aad31dEd4a4557;
-    Immortals           = 0x22E5F62D0FA19974749faa194e3d3eF6d89c08d7;
-    Spartans            = 0x163733bcc28dbf26B41a8CfA83e369b5B3af741b;
-    Athenians           = 0x17052d51E954592C1046320c2371AbaB6C73Ef10;
-    *******************************************************************************************/
-    function Battle(uint _startTime, uint _life, uint8 _avarageBlockTime, address _persians, address _immortals, address _spartans, address _athenians) Timed(_startTime, _life, _avarageBlockTime) {
+    function Battle(uint _startTime, uint _life, uint8 _avarageBlockTime, address _persians, address _immortals, address _spartans, address _athenians) Timed(_startTime, _life, _avarageBlockTime) Upgradable("1.0.0") {
         persians = _persians;
         immortals = _immortals;
         spartans = _spartans;
