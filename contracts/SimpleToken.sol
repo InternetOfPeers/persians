@@ -14,16 +14,15 @@ contract SimpleToken is Owned, TokenEIP20 {
     string public name;
     string public symbol;
 
-    uint8 public decimals;
-    
+    uint256 public decimals;
     uint256 public totalSupply;
 
-    function SimpleToken(string _name, string _symbol, uint8 _decimals, uint256 _totalSupply) {
+    function SimpleToken(string _name, string _symbol, uint256 _decimals, uint256 _totalSupply) {
         name = _name;
         symbol = _symbol;
         decimals = _decimals;
-        totalSupply = _totalSupply;
-        balances[owner] = _totalSupply;        
+        totalSupply = decimals > 0 ? _totalSupply * 10**decimals : _totalSupply;
+        balances[owner] = totalSupply;
     }
 
     function transfer(address _to, uint256 _value) returns (bool success) {
