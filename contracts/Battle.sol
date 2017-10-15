@@ -1,5 +1,5 @@
 /*******************************************************************************
-**************************     BATTLE CONTRACT v1    ***************************
+**************************     BATTLE CONTRACT v1.1  ***************************
 ********************************************************************************
 
 Battle smart contract is a platform/ecosystem for gaming built on top of a
@@ -44,10 +44,10 @@ battle with other Warrior tokens holders, for profit or just for fun!
 **************************      TOKEN ADDRESSES      ***************************
 ********************************************************************************
 
-        0xaEc98A708810414878c3BCDF46Aad31dEd4a4557      Persians
-        0x22E5F62D0FA19974749faa194e3d3eF6d89c08d7      Immortals
-        0x163733bcc28dbf26B41a8CfA83e369b5B3af741b      Spartans
-        0x17052d51E954592C1046320c2371AbaB6C73Ef10      Athenians
+        0x163733bcc28dbf26B41a8CfA83e369b5B3af741b      Persians    (PRS)
+        0x22E5F62D0FA19974749faa194e3d3eF6d89c08d7      Immortals   (IMT)
+        0xaEc98A708810414878c3BCDF46Aad31dEd4a4557      Spartans    (300)
+        0x17052d51E954592C1046320c2371AbaB6C73Ef10      Athenians   (ATH)
 
 *******************************************************************************/
 pragma solidity ^0.4.15;
@@ -255,7 +255,7 @@ contract Battle is Timed, Upgradable {
         }
         return getPersiansBattlePoints() > getGreeksBattlePoints() ? "Persians" : "Greeks";
     }
-    
+
     /****           DEV FUNCTIONS                   *******/
     /**** REMOVE FOLLOWING FUNCTIONS BEFORE DEPLOY  *******/
     /**** REMOVE FOLLOWING FUNCTIONS BEFORE DEPLOY  *******/
@@ -263,11 +263,9 @@ contract Battle is Timed, Upgradable {
     /**** REMOVE FOLLOWING FUNCTIONS BEFORE DEPLOY  *******/
     /****             REALLY!                       *******/
 
-    function setTime(uint _startTime, uint life, uint8 _avarageBlockTime) {
+    function setTime(uint _startTime, uint life, uint8 _avarageBlockTime) onlyOwner {
         startTime = _startTime;
         endTime = _startTime + life;
         avarageBlockTime = _avarageBlockTime;
     }
-    
-    event Debug (uint value);
 }
