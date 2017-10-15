@@ -238,6 +238,14 @@ contract Battle is Timed, Upgradable {
         return (getPersiansBattlePoints() == getGreeksBattlePoints());
     }
 
+    function getTemporaryWinningFaction() constant returns (string temporaryWinningFaction) {
+        if (isDraw()) {
+            return "It's currently a draw, but the battle is still in progress!";
+        }
+        return getPersiansBattlePoints() > getGreeksBattlePoints() ?
+            "Persians are winning, but the battle is still in progress!" : "Greeks are winning, but the battle is still in progress!";
+    }
+
     function getWinningFaction() constant returns (string winningFaction) {
         if (isInProgress()) {
             return "The battle is still in progress";
@@ -247,7 +255,7 @@ contract Battle is Timed, Upgradable {
         }
         return getPersiansBattlePoints() > getGreeksBattlePoints() ? "Persians" : "Greeks";
     }
-
+    
     /****           DEV FUNCTIONS                   *******/
     /**** REMOVE FOLLOWING FUNCTIONS BEFORE DEPLOY  *******/
     /**** REMOVE FOLLOWING FUNCTIONS BEFORE DEPLOY  *******/
