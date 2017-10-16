@@ -143,10 +143,8 @@ var MyContract = web3.eth.contract(abi);
 // initiate contract for an address
 var myContractInstance = MyContract.at('0x12a0f29d4fe505f9426ad1ec82c19a335707e849');
 
-
-
-$("#totalPRS").html(myContractInstance.getPersiansBattlePoints()).toString(10));
-$("#total300").html(myContractInstance.getGreeksBattlePoints()).toString(10));
+$("#totalPRS").html(myContractInstance.getPersiansBattlePoints().toString(10));
+$("#total300").html(myContractInstance.getGreeksBattlePoints().toString(10));
 
  function toFixed(x) {
         if (x.indexOf("e+") !== -1) {            
