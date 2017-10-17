@@ -63,7 +63,7 @@
                     <div class="wrapper">
                         <div class="caption post-content">
 
-                            <h2 id="totalIMT">-</h2>
+                            <h2 id="totalIMT">30</h2>
 
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                     <div class="wrapper">
                         <div class="caption post-content">
 
-                            <h2 id="totalPRS">-</h2>
+                            <h2 id="totalPRS">280.0000</h2>
 
                         </div>
                     </div>
@@ -90,16 +90,16 @@
                 <div class="col-md-12 text-center title-footer" id="winner"></div>     
 </div>
             <div class="col-sm-3 text-center"> <img src="img/battle/300_Badge.png">
-                <h2 id="total300">-</h2>
+                <h2 id="total300">180</h2>
             </div>
             <div class="col-sm-2 text-center"> <img src="img/battle/ATH_Badge.png">
-                <h2 id="totalATH">-</h2>
+                <h2 id="totalATH">19</h2>
             </div>
         </div>
 
         <div class="row text-centet">
             <div class="row">
-                <div class="col-md-12 text-center title-footer">Battle End in</div>
+                <div class="col-md-12 text-center title-footer">Battle Start in</div>
             </div>
 
             <div id="clockdiv">
@@ -155,13 +155,18 @@
 
 
 	$("#totalPRS").html(warriorsPRS);
-    	$("#totalIMT").html(warriorsIMT);
+    $("#totalIMT").html(warriorsIMT);
 	$("#total300").html(warriors300);
 	$("#totalATH").html(warriorsATH);
 
+//	debugger;
 //    $("#winner").html("Winner:" + myContractInstance.getWinningFaction());
 
-  	
+    
+
+
+
+	
  function toFixed(x) {
         if (x.indexOf("e+") !== -1) {            
             var value = web3.toBigNumber(x);
@@ -171,11 +176,18 @@
     }
 	
         function getTimeRemaining(endtime) {
+		//debugger;
             var t = Date.parse(endtime) - Date.parse(new Date());
             var seconds = Math.floor((t / 1000) % 60);
             var minutes = Math.floor((t / 1000 / 60) % 60);
             var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
-            var days = Math.floor(t / (1000 * 60 * 60 * 24));
+			
+			var timeDiff = Math.abs((endtime).getTime() - new Date().getTime());
+			
+			var days = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+
+
+            //var days = Math.floor(t / (1000 * 60 * 60 * 24));
             return {
                 'total': t,
                 'days': days,
@@ -208,11 +220,13 @@
             updateClock();
             var timeinterval = setInterval(updateClock, 1000);
         }
-	var deadline = new Date(Date.parse(new Date(2017,10,24,0,0,0,0)) + 0 * 24 * 60 * 60 * 1000);
-	    
-        
+
+        //var deadline = new Date(Date.parse(new Date(2017,10,18)) + 6 * 1 * 60 * 60 * 1000);
+		var deadline = new Date(2017,9,23);
         initializeClock('clockdiv', deadline);
 
     </script>
 </body>
+
 </html>
+
