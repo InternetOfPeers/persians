@@ -159,7 +159,7 @@ contract Battle is Timed, Upgradable {
 
     function assignWarriorsToBattle(address _player, address _faction, uint _warriors, uint _maxWarriors) private {
         require(warriorsOnTheBattlefield[_faction].add(_warriors) <= _maxWarriors);
-        assert(TokenERC20(_faction).transferFrom(_player, address(this), _warriors));
+        require(TokenERC20(_faction).transferFrom(_player, address(this), _warriors));
         warriorsByPlayer[_player][_faction] = warriorsByPlayer[_player][_faction].add(_warriors);
         warriorsOnTheBattlefield[_faction] = warriorsOnTheBattlefield[_faction].add(_warriors);
     }
@@ -177,7 +177,7 @@ contract Battle is Timed, Upgradable {
     }
 
     function sendWarriors(address _player, address _faction, uint _warriors) private {
-        assert(TokenERC20(_faction).transfer(_player, _warriors));
+        require(TokenERC20(_faction).transfer(_player, _warriors));
     }
 
     /*** CONSTANT FUNCTIONS AND DAPP HELPERS ***/
