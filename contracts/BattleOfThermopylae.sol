@@ -53,7 +53,7 @@ battle with other Warrior tokens holders, for profit or just for fun!
 *******************************************************************************/
 pragma solidity ^0.4.15;
 
-import "./TokenERC20.sol";
+import "./TokenEIP20.sol";
 import "./Timed.sol";
 import "./SafeMathLib.sol";
 import "./Upgradable.sol";
@@ -176,7 +176,7 @@ contract BattleOfThermopylae is Timed, Upgradable {
 
     function assignWarriorsToBattle(address _player, address _faction, uint _warriors, uint _maxWarriors) private {
         require(warriorsOnTheBattlefield[_faction].add(_warriors) <= _maxWarriors);
-        require(TokenERC20(_faction).transferFrom(_player, address(this), _warriors));
+        require(TokenEIP20(_faction).transferFrom(_player, address(this), _warriors));
         warriorsByPlayer[_player][_faction] = warriorsByPlayer[_player][_faction].add(_warriors);
         warriorsOnTheBattlefield[_faction] = warriorsOnTheBattlefield[_faction].add(_warriors);
     }
@@ -194,11 +194,11 @@ contract BattleOfThermopylae is Timed, Upgradable {
     }
 
     function sendWarriors(address _player, address _faction, uint _warriors) private {
-        require(TokenERC20(_faction).transfer(_player, _warriors));
+        require(TokenEIP20(_faction).transfer(_player, _warriors));
     }
 
     function sendBattleTokens(address _player, uint _value) private {
-        require(TokenERC20(battles).transferFrom(battlesOwner, _player, _value));
+        require(TokenEIP20(battles).transferFrom(battlesOwner, _player, _value));
     }
 
     /*** CONSTANT FUNCTIONS AND DAPP HELPERS ***/
