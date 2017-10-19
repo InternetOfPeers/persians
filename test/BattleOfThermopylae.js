@@ -1,6 +1,7 @@
 'use strict'
 
-const Battle = artifacts.require('./Battle.sol');
+const BattleOfThermopylae = artifacts.require('./BattleOfThermopylae.sol');
+const BattleToken = artifacts.require('./BattleToken.sol');
 const SimpleToken = artifacts.require("./SimpleToken.sol");
 const assertJump = require('./helpers/assertJump');
 
@@ -10,12 +11,13 @@ const assertJump = require('./helpers/assertJump');
     // result.receipt => receipt object
 */
 
-contract('Battle', function (accounts) {
+contract('BattleOfThermopylae', function (accounts) {
 
     const NOW = Math.floor(new Date().getTime() / 1000);
     const YESTERDAY = NOW - (3600 * 24);
     const WAD = Math.pow(10, 18);
 
+    const owner = accounts[0];            // Contract's owner
     const persian_1 = accounts[1];        // 150.000 Persians
     const persian_2 = accounts[2];        // 120.000 Persians
     const immortal_1 = accounts[3];       //      50 Immortals
@@ -24,19 +26,16 @@ contract('Battle', function (accounts) {
     const spartan_2 = accounts[6];        //     120 Spartans
     const athenian_1 = accounts[7];       //      50 Athenians
     const athenian_2 = accounts[8];       //      40 Athenians
-    const all_warriors_1 = accounts[9];   // 130.000 Persians
-    //     110 Immortals
-    //     130 Spartans
-    //     110 Athenians
+    const all_warriors_1 = accounts[9];   // 130.000 Persians, 110 Immortals, 130 Spartans, 110 Athenians
 
     const BP_PERSIAN = 1;                 //     1 Battle Point
     const BP_IMMORTAL = 100;              //   100 Battle Points
     const BP_SPARTAN = 1000;              // 1.000 Battle Points
     const BP_ATHENIAN = 100;              //   100 Battle Points
 
-    var battle, persians, immortals, spartans, athenians;   // Contract instances
+    var battle, persians, immortals, spartans, athenians, battleToken;   // Contract instances
 
-    before("Distribute all tokens and deploy battle contract", function () {
+    async function initContracts() {
         return SimpleToken.new("Persian", "PRS", 18, 300000 * WAD + 100000 * WAD).then(function (instance) {
             persians = instance;
             persians.transfer(persian_1, 150000 * WAD);
@@ -67,10 +66,20 @@ contract('Battle', function (accounts) {
             let startBattle = NOW;
             let endBattle = startBattle + (60 * 60 * 24);
             let avarageBlockTime = 24;
-            return Battle.new(startBattle, endBattle, avarageBlockTime, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
-                battle = instance;
+            return BattleOfThermopylae.new(startBattle, endBattle, avarageBlockTime, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
+                return battle = instance;
             });
+        }).then(function () {
+            return BattleToken.new(battle.address).then(function (instance) {
+                return battleToken = instance;
+            });
+        }).then(function () {
+            return battle.setBattleTokenAddress(battleToken.address, owner);
         });
+    }
+
+    before("Distribute all tokens and deploy battle contract", async function () {
+        await initContracts();
     });
 
     it('Battle should be in progress', async function () {
@@ -674,41 +683,7 @@ contract('Battle', function (accounts) {
     ******************************************************************************/
 
     it('Persians won! (Set new battle and battlefield)', async function () {
-        await SimpleToken.new("Persian", "PRS", 18, 300000 * WAD + 100000 * WAD).then(function (instance) {
-            persians = instance;
-            persians.transfer(persian_1, 150000 * WAD);
-            persians.transfer(persian_2, 120000 * WAD);
-            return persians.transfer(all_warriors_1, 30000 * WAD + 100000 * WAD);
-        }).then(function () {
-            return SimpleToken.new("Immortal", "IMT", 0, 100 + 100).then(function (instance) {
-                immortals = instance;
-                immortals.transfer(immortal_1, 50);
-                immortals.transfer(immortal_2, 40)
-                return immortals.transfer(all_warriors_1, 10 + 100);
-            })
-        }).then(function () {
-            return SimpleToken.new("Spartan", "300", 18, 300 * WAD + 100 * WAD).then(function (instance) {
-                spartans = instance;
-                spartans.transfer(spartan_1, 150 * WAD);
-                spartans.transfer(spartan_2, 120 * WAD);
-                return spartans.transfer(all_warriors_1, 30 * WAD + 100 * WAD);
-            })
-        }).then(function () {
-            return SimpleToken.new("Athenian", "100", 18, 100 * WAD + 100 * WAD).then(function (instance) {
-                athenians = instance;
-                athenians.transfer(athenian_1, 50 * WAD);
-                athenians.transfer(athenian_2, 40 * WAD);
-                return athenians.transfer(all_warriors_1, 10 * WAD + 100 * WAD);
-            })
-        }).then(function () {
-            let startBattle = NOW;
-            let endBattle = startBattle + (60 * 60 * 24);
-            let avarageBlockTime = 24;
-            return Battle.new(startBattle, endBattle, avarageBlockTime, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
-                battle = instance;
-            });
-        });
-
+        await initContracts();
         await prepareBattlefield();
 
         // Assign other 23.111 persians to battle
@@ -1088,41 +1063,7 @@ contract('Battle', function (accounts) {
     ******************************************************************************/
 
     it('It\'s a draw! (Set new battle and battlefield)', async function () {
-        await SimpleToken.new("Persian", "PRS", 18, 300000 * WAD + 100000 * WAD).then(function (instance) {
-            persians = instance;
-            persians.transfer(persian_1, 150000 * WAD);
-            persians.transfer(persian_2, 120000 * WAD);
-            return persians.transfer(all_warriors_1, 30000 * WAD + 100000 * WAD);
-        }).then(function () {
-            return SimpleToken.new("Immortal", "IMT", 0, 100 + 100).then(function (instance) {
-                immortals = instance;
-                immortals.transfer(immortal_1, 50);
-                immortals.transfer(immortal_2, 40)
-                return immortals.transfer(all_warriors_1, 10 + 100);
-            })
-        }).then(function () {
-            return SimpleToken.new("Spartan", "300", 18, 300 * WAD + 100 * WAD).then(function (instance) {
-                spartans = instance;
-                spartans.transfer(spartan_1, 150 * WAD);
-                spartans.transfer(spartan_2, 120 * WAD);
-                return spartans.transfer(all_warriors_1, 30 * WAD + 100 * WAD);
-            })
-        }).then(function () {
-            return SimpleToken.new("Athenian", "100", 18, 100 * WAD + 100 * WAD).then(function (instance) {
-                athenians = instance;
-                athenians.transfer(athenian_1, 50 * WAD);
-                athenians.transfer(athenian_2, 40 * WAD);
-                return athenians.transfer(all_warriors_1, 10 * WAD + 100 * WAD);
-            })
-        }).then(function () {
-            let startBattle = NOW;
-            let endBattle = startBattle + (60 * 60 * 24);
-            let avarageBlockTime = 24;
-            return Battle.new(startBattle, endBattle, avarageBlockTime, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
-                battle = instance;
-            });
-        });
-
+        await initContracts();
         await prepareBattlefield();
 
         // Assign other 4.198 persians to battle
@@ -1538,4 +1479,44 @@ contract('Battle', function (accounts) {
         assert(playerGreeksBP.equals(0), player + ' should have 0 Battle Points, found ' + playerGreeksBP);
     });
 
+    it('Should receive Battle token just after sending troops to the battlefield (Set new battle and battlefield)', async function () {
+        await initContracts();
+
+        // Assign 150.000 Persians to the battlefield
+        let tokens = web3.toBigNumber(150000).mul(WAD);
+        let expectedBattleTokenBalance = web3.toBigNumber(150000).mul(WAD);
+        await persians.approve(battle.address, tokens, { from: persian_1 });
+        await battle.assignPersiansToBattle(tokens, { from: persian_1 });
+        let battleTokenBalance = await battleToken.balanceOf(persian_1);
+        assert(expectedBattleTokenBalance.equals(battleTokenBalance), 'Battle token was not correctly sent. Expected: ' + expectedBattleTokenBalance + ' -- Found: ' + battleTokenBalance);
+
+        // Assign 15 Immortals to the battlefiled
+        tokens = web3.toBigNumber(15);
+        expectedBattleTokenBalance = web3.toBigNumber(30000).mul(WAD);
+        await immortals.approve(battle.address, tokens, { from: immortal_1 });
+        await battle.assignImmortalsToBattle(tokens, { from: immortal_1 });
+        battleTokenBalance = await battleToken.balanceOf(immortal_1);
+        assert(expectedBattleTokenBalance.equals(battleTokenBalance), 'Battle token was not correctly sent. Expected: ' + expectedBattleTokenBalance + ' -- Found: ' + battleTokenBalance);
+
+        // Assign 150 Spartans to the battlefiled
+        tokens = web3.toBigNumber(150).mul(WAD);
+        expectedBattleTokenBalance = web3.toBigNumber(150000).mul(WAD);
+        await spartans.approve(battle.address, tokens, { from: spartan_1 });
+        await battle.assignSpartansToBattle(tokens, { from: spartan_1 });
+        battleTokenBalance = await battleToken.balanceOf(spartan_1);
+        assert(expectedBattleTokenBalance.equals(battleTokenBalance), 'Battle token was not correctly sent. Expected: ' + expectedBattleTokenBalance + ' -- Found: ' + battleTokenBalance);
+
+        // Assign 15 Athenians to the battlefiled
+        tokens = web3.toBigNumber(15).mul(WAD);
+        expectedBattleTokenBalance = web3.toBigNumber(30000).mul(WAD);
+        await athenians.approve(battle.address, tokens, { from: athenian_1 });
+        await battle.assignAtheniansToBattle(tokens, { from: athenian_1 });
+        battleTokenBalance = await battleToken.balanceOf(athenian_1);
+        assert(expectedBattleTokenBalance.equals(battleTokenBalance), 'Battle token was not correctly sent. Expected: ' + expectedBattleTokenBalance + ' -- Found: ' + battleTokenBalance);
+
+        // Check owner balance
+        expectedBattleTokenBalance = web3.toBigNumber(640000).mul(WAD);
+        battleTokenBalance = await battleToken.balanceOf(owner);
+        assert(expectedBattleTokenBalance.equals(battleTokenBalance), 'Balance of the Battle token\'s owner is wrong. Expected: ' + expectedBattleTokenBalance + ' -- Found: ' + battleTokenBalance);
+    });
 });
