@@ -111,12 +111,22 @@ p{
 	padding:115px 0;
 }
 
+.header-part{
+	background: url(../img/header.jpg) no-repeat bottom center scroll;
+	background-size:cover;
+	padding:55px 0;
+	text-align:center;
+	color:#fff;
+
+}
+
+
 
 .logo{
 	width:130px;
 	margin:0 auto 35px;
 }
-.header h1{
+.header-part h1{
 	font-family: 'Montserrat',sans-serif;
 	font-size:60px;
 	font-weight:400;
@@ -124,7 +134,7 @@ p{
 	margin:0 0 22px 0 ;
 	color:#fff;
 }
-.header h2{
+.header-part h2{
 	font-family: 'Montserrat',sans-serif;
 	font-size:50px;
 	font-weight:400;
@@ -133,7 +143,7 @@ p{
 	color:#d4bc75;
 }
 
-.header h3{
+.header-part h3{
 	font-family: 'Montserrat',sans-serif;
 	font-size:20px;
 	font-weight:400;
@@ -141,7 +151,7 @@ p{
 	margin:0 0 22px 0 ;
 	color:#fff;
 }
-.header h5{
+.header-part h5{
 	font-size:16px;
 	color:#fff;
 	font-family: 'Open Sans', sans-serif;
@@ -149,7 +159,7 @@ p{
 	text-align:center;
 	margin:0 0 60px 0;
 }
-.header h6{
+.header-part h6{
 	font-size:16px;
 	color:#fff;
 	font-family: 'Open Sans', sans-serif;
@@ -258,7 +268,7 @@ color: #fff;
 }
 
 .main-section{
-	padding:90px 0 110px;
+	padding: 90px 0 135px;
 }
 
 
