@@ -36,6 +36,7 @@
     <!-- Custom CSS -->
     <link href="css/full.css" rel="stylesheet">
 
+<link rel="stylesheet" href="css/odometer-theme-plaza.css" />
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -85,7 +86,7 @@
                     <div class="wrapper">
                         <div class="caption post-content">
 
-                            <h2 id="totalIMT">X</h2>
+                            <h2><div class="totalIMT"></div></h2>
 
                         </div>
                     </div>
@@ -97,7 +98,7 @@
                     <div class="wrapper">
                         <div class="caption post-content">
 
-                            <h2 id="totalPRS">X</h2>
+                            <h2 ><div class="totalPRS"></div></h2>
 
                         </div>
                     </div>
@@ -117,11 +118,13 @@
             </div>
             <div class="col-sm-3 text-center">
                 <img src="img/battle/300_Badge.png">
-                <h2 id="total300">X</h2>
+                   <h2><div class="total300"></div></h2>
+
             </div>
             <div class="col-sm-2 text-center">
                 <img src="img/battle/ATH_Badge.png">
-                <h2 id="totalATH">X</h2>
+                   <h2><div class="totalATH"></div></h2>
+
             </div>
         </div>
 
@@ -159,6 +162,7 @@
     <script src='js/bignumber.js'></script>
     <script src="js/web3.min.js"></script>
 
+    <script src="js/odometer.js"></script>
     <script>
 
         var Web3 = require('web3');
@@ -182,10 +186,31 @@
         var warriorsATH = myContractInstance.warriorsOnTheBattlefield(addressATH).toString(10);
 
 
-        $("#totalPRS").html(warriorsPRS);
-        $("#totalIMT").html(warriorsIMT);
-        $("#total300").html(warriors300);
-        $("#totalATH").html(warriorsATH);
+odometerOptions = { auto: false }; // Disables auto-initialization
+
+        // For each odometer, initialize with the theme passed in:
+        var totalPRS = new Odometer({ el: $('.totalPRS')[0], value: 300000,  format: '(ddd.ddd)' });
+        totalPRS.render();
+        totalPRS.update(warriorsPRS);
+
+
+        var totalIMT = new Odometer({ el: $('.totalIMT')[0], value: 300,  format: '(ddd.ddd)' });
+        totalIMT.render();
+        totalIMT.update(warriorsIMT);
+
+     //   $("#totalIMT").html(warriorsIMT);
+
+     
+        var total300 = new Odometer({ el: $('.total300')[0], value: 300,  format: '(ddd.ddd)' });
+        total300.render();
+        total300.update(warriors300);
+
+        
+        var totalATH = new Odometer({ el: $('.totalATH')[0], value: 300,  format: '(ddd.ddd)' });
+        totalATH.render();
+        totalATH.update(warriorsATH);
+
+
 
         //	debugger;
         //    $("#winner").html("Winner: " + myContractInstance.getWinningFaction());
@@ -249,6 +274,17 @@
         initializeClock('clockdiv', deadline);
 
     </script>
+
+
+<div class="odometer2">30001</div>
+
+<script>
+
+
+var odometer2 = new Odometer({ el: $('.odometer2')[0], value: 123, theme: 'plaza' });
+odometer2.render();
+
+</script>
 </body>
 
 </html>
