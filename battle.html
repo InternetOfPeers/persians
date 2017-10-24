@@ -36,7 +36,7 @@
     <!-- Custom CSS -->
     <link href="css/full.css" rel="stylesheet">
 
-<link rel="stylesheet" href="css/odometer-theme-plaza.css" />
+    <link rel="stylesheet" href="css/odometer-theme-plaza.css" />
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -73,8 +73,10 @@
             <div class="col-md-12 text-center">
                 <div class="title" style="color:red"> Battle of Thermopylae
                     <div class="title-footer">
-                        <a href="http://persians.network/#battle" style="color:white">Join the Battle</a>
-                    </div>
+  
+                        <a href="http://persians.network/#battle" style="color:white">Join the Battle</a></div>
+                         
+                    
                 </div>
             </div>
         </div>
@@ -86,7 +88,12 @@
                     <div class="wrapper">
                         <div class="caption post-content">
 
-                            <h2><div class="totalIMT"></div></h2>
+                            <h2>
+                                <a href="https://etherscan.io/token/0x22E5F62D0FA19974749faa194e3d3eF6d89c08d7?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
+                                    target="_blank">
+                                    <div class="totalIMT"></div>
+                                </a>
+                            </h2>
 
                         </div>
                     </div>
@@ -98,7 +105,12 @@
                     <div class="wrapper">
                         <div class="caption post-content">
 
-                            <h2 ><div class="totalPRS"></div></h2>
+                            <h2>
+                                <a href="https://etherscan.io/token/0x163733bcc28dbf26b41a8cfa83e369b5b3af741b?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
+                                    target="_blank">
+                                    <div class="totalPRS"></div>
+                                </a>
+                            </h2>
 
                         </div>
                     </div>
@@ -112,18 +124,30 @@
                 <br>
                 <img src="img/battle/vs.png">
 
-                <div class="col-md-12 text-center title-footer">&nbsp;</div>
+                <div class="col-md-12 text-center"><br><span style="color:bisque; font-weight: bold;">Battle Token available:</span> <div  id="btltoken"></div></div>
 
-                <div class="col-md-12 text-center title-footer" id="winner"></div>
+
             </div>
             <div class="col-sm-3 text-center">
                 <img src="img/battle/300_Badge.png">
-                   <h2><div class="total300"></div></h2>
+                <h2>
+                    <a href="https://etherscan.io/token/0xaec98a708810414878c3bcdf46aad31ded4a4557?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
+                        target="_blank">
+                        <div class="total300"></div>
+                    </a>
+
+                </h2>
 
             </div>
             <div class="col-sm-2 text-center">
                 <img src="img/battle/ATH_Badge.png">
-                   <h2><div class="totalATH"></div></h2>
+                <h2>
+                    <a href="https://etherscan.io/token/0xe3d898170d1f56a78e9757a89402bb4de056a8c5?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
+                        target="_blank">
+                        <div class="totalATH"></div>
+                    </a>
+
+                </h2>
 
             </div>
         </div>
@@ -131,8 +155,10 @@
         <div class="row text-center" style="background-color:rgba(0, 0, 0, 0.5);padding-bottom:20pt">
             <div class="row">
                 <div class="col-md-12 text-center title-footer">Battle is open!!</div>
+                <div class="col-md-12 text-center title-footer" id="winner"></div>
+              
             </div>
-<!-- 
+            <!-- 
             <div id="clockdiv">
                 <div>
                     <span class="days">2</span>
@@ -164,13 +190,15 @@
     <script src="js/web3.min.js"></script>
 
     <script src="js/odometer.js"></script>
+    <script src="js/progressbar.js"></script>
     <script>
+       
 
         var Web3 = require('web3');
         var web3 = new Web3();
         web3.setProvider(new web3.providers.HttpProvider("https://mainnet.infura.io"));
 
-        var abi = [{ "constant": true, "inputs": [], "name": "getGreeksBattlePoints", "outputs": [{ "name": "greeksBattlePoints", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_ATHENIANS", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_warriors", "type": "uint256" }], "name": "assignAtheniansToBattle", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "immortals", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "deprecated", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getImmortalsOnTheBattlefield", "outputs": [{ "name": "immortalsOnTheBattlefield", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "newVersion", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "endTime", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_faction", "type": "address" }], "name": "getTotalSlaves", "outputs": [{ "name": "slaves", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_warriors", "type": "uint256" }], "name": "assignImmortalsToBattle", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "athenians", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BATTLE_POINT_DECIMALS", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getPersiansOnTheBattlefield", "outputs": [{ "name": "persiansOnTheBattlefield", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "isInTime", "outputs": [{ "name": "inTime", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "WAD", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "isInProgress", "outputs": [{ "name": "inProgress", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [], "name": "redeemWarriors", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "startTime", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "isTimeExpired", "outputs": [{ "name": "timeExpired", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BP_ATHENIAN", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "avarageBlockTime", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "persians", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getAtheniansOnTheBattlefield", "outputs": [{ "name": "atheniansOnTheBattlefield", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "address" }], "name": "warriorsOnTheBattlefield", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getGreeksBattlePointsBy", "outputs": [{ "name": "playerBattlePoints", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }, { "name": "_loosingMainTroops", "type": "address" }], "name": "computeSlaves", "outputs": [{ "name": "slaves", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "isEnded", "outputs": [{ "name": "ended", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "address" }, { "name": "", "type": "address" }], "name": "warriorsByPlayer", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_startTime", "type": "uint256" }, { "name": "life", "type": "uint256" }, { "name": "_avarageBlockTime", "type": "uint8" }], "name": "setTime", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "spartans", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "getPersiansBattlePoints", "outputs": [{ "name": "persiansBattlePoints", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getPersiansBattlePointsBy", "outputs": [{ "name": "playerBattlePoints", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getSpartansOnTheBattlefield", "outputs": [{ "name": "spartansOnTheBattlefield", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BATTLE_CASUALTIES", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_PERSIANS", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_newVersion", "type": "string" }, { "name": "_newAddress", "type": "address" }], "name": "setDeprecated", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_SPARTANS", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "getWinningFaction", "outputs": [{ "name": "winningFaction", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "newAddress", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BP_PERSIAN", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_IMMORTALS", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BP_IMMORTAL", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BP_SPARTAN", "outputs": [{ "name": "", "type": "uint16" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_warriors", "type": "uint256" }], "name": "assignSpartansToBattle", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "isDraw", "outputs": [{ "name": "draw", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_warriors", "type": "uint256" }], "name": "assignPersiansToBattle", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "VERSION", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [{ "name": "_startTime", "type": "uint256" }, { "name": "_life", "type": "uint256" }, { "name": "_avarageBlockTime", "type": "uint8" }, { "name": "_persians", "type": "address" }, { "name": "_immortals", "type": "address" }, { "name": "_spartans", "type": "address" }, { "name": "_athenians", "type": "address" }], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "_from", "type": "address" }, { "indexed": false, "name": "_faction", "type": "address" }, { "indexed": false, "name": "_battlePointsIncrementForecast", "type": "uint256" }], "name": "WarriorsAssignedToBattlefield", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "_to", "type": "address" }, { "indexed": false, "name": "_faction", "type": "address" }, { "indexed": false, "name": "_survivedWarriors", "type": "uint256" }], "name": "WarriorsBackToHome", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "name": "value", "type": "uint256" }], "name": "Debug", "type": "event" }];
+        var abi = [{ "constant": true, "inputs": [], "name": "getGreeksBattlePoints", "outputs": [{ "name": "greeksBattlePoints", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_ATHENIANS", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_warriors", "type": "uint256" }], "name": "assignAtheniansToBattle", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "immortals", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "deprecated", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BTL_IMMORTAL", "outputs": [{ "name": "", "type": "uint16" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getImmortalsOnTheBattlefield", "outputs": [{ "name": "immortalsOnTheBattlefield", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BTL_PERSIAN", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "newVersion", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "endTime", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_faction", "type": "address" }], "name": "getTotalSlaves", "outputs": [{ "name": "slaves", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_warriors", "type": "uint256" }], "name": "assignImmortalsToBattle", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "athenians", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BATTLE_POINT_DECIMALS", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "getTemporaryWinningFaction", "outputs": [{ "name": "temporaryWinningFaction", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "battles", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getPersiansOnTheBattlefield", "outputs": [{ "name": "persiansOnTheBattlefield", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "isInTime", "outputs": [{ "name": "inTime", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_battleTokenAddress", "type": "address" }, { "name": "_battleTokenOwner", "type": "address" }], "name": "setBattleTokenAddress", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "BTL_SPARTAN", "outputs": [{ "name": "", "type": "uint16" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "WAD", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "isInProgress", "outputs": [{ "name": "inProgress", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [], "name": "redeemWarriors", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "startTime", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BTL_ATHENIAN", "outputs": [{ "name": "", "type": "uint16" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "isTimeExpired", "outputs": [{ "name": "timeExpired", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BP_ATHENIAN", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "avarageBlockTime", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "persians", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getAtheniansOnTheBattlefield", "outputs": [{ "name": "atheniansOnTheBattlefield", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "address" }], "name": "warriorsOnTheBattlefield", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getGreeksBattlePointsBy", "outputs": [{ "name": "playerBattlePoints", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }, { "name": "_loosingMainTroops", "type": "address" }], "name": "computeSlaves", "outputs": [{ "name": "slaves", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "isEnded", "outputs": [{ "name": "ended", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "", "type": "address" }, { "name": "", "type": "address" }], "name": "warriorsByPlayer", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "spartans", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "getPersiansBattlePoints", "outputs": [{ "name": "persiansBattlePoints", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getPersiansBattlePointsBy", "outputs": [{ "name": "playerBattlePoints", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_player", "type": "address" }], "name": "getSpartansOnTheBattlefield", "outputs": [{ "name": "spartansOnTheBattlefield", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BATTLE_CASUALTIES", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_PERSIANS", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_newVersion", "type": "string" }, { "name": "_newAddress", "type": "address" }], "name": "setDeprecated", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_SPARTANS", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "getWinningFaction", "outputs": [{ "name": "winningFaction", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "newAddress", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BP_PERSIAN", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "MAX_IMMORTALS", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "battlesOwner", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BP_IMMORTAL", "outputs": [{ "name": "", "type": "uint8" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "BP_SPARTAN", "outputs": [{ "name": "", "type": "uint16" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_warriors", "type": "uint256" }], "name": "assignSpartansToBattle", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "isDraw", "outputs": [{ "name": "draw", "type": "bool" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_warriors", "type": "uint256" }], "name": "assignPersiansToBattle", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "VERSION", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [{ "name": "_startTime", "type": "uint256" }, { "name": "_life", "type": "uint256" }, { "name": "_avarageBlockTime", "type": "uint8" }, { "name": "_persians", "type": "address" }, { "name": "_immortals", "type": "address" }, { "name": "_spartans", "type": "address" }, { "name": "_athenians", "type": "address" }], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "_from", "type": "address" }, { "indexed": false, "name": "_faction", "type": "address" }, { "indexed": false, "name": "_battlePointsIncrementForecast", "type": "uint256" }], "name": "WarriorsAssignedToBattlefield", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "_to", "type": "address" }, { "indexed": false, "name": "_faction", "type": "address" }, { "indexed": false, "name": "_survivedWarriors", "type": "uint256" }], "name": "WarriorsBackToHome", "type": "event" }];
         var contractAddress = "0x553B4546D26F383d4f4a056B7f50DaDFf07FB252";
 
         var addressPRS = "0x163733bcc28dbf26B41a8CfA83e369b5B3af741b";
@@ -181,40 +209,102 @@
         var MyContract = web3.eth.contract(abi);
         var myContractInstance = MyContract.at(contractAddress);
 
-        var warriorsPRS = myContractInstance.warriorsOnTheBattlefield(addressPRS).toString(10);
-        var warriorsIMT = myContractInstance.warriorsOnTheBattlefield(addressIMT).toString(10);
-        var warriors300 = myContractInstance.warriorsOnTheBattlefield(address300).toString(10);
-        var warriorsATH = myContractInstance.warriorsOnTheBattlefield(addressATH).toString(10);
 
-
-odometerOptions = { auto: false }; // Disables auto-initialization
-
-        // For each odometer, initialize with the theme passed in:
-        var totalPRS = new Odometer({ el: $('.totalPRS')[0], value: 300000,  format: '(ddd.ddd)' });
-        totalPRS.render();
-        //debugger;
-        totalPRS.update(warriorsPRS.slice(0,warriorsPRS.length - 9) / 1000000000);
-
-
-        var totalIMT = new Odometer({ el: $('.totalIMT')[0], value: 300,  format: '(ddd.ddd)' });
-        totalIMT.render();
-        totalIMT.update(warriorsIMT);
-
-     //   $("#totalIMT").html(warriorsIMT);
-
-     
-        var total300 = new Odometer({ el: $('.total300')[0], value: 300,  format: '(ddd.ddd)' });
-        total300.render();
-
-        total300.update(warriors300.slice(0,warriors300.length - 9) / 1000000000);
-
+        var abiBTLToken = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"},{"name":"_extraData","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"_battleAddress","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_spender","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Approval","type":"event"}];
+        var BTLcontractAddress = "0x2accaB9cb7a48c3E82286F0b2f8798D201F4eC3f";
+        var MyContractBTL = web3.eth.contract(abiBTLToken);
+        var myContractInstanceBTL = MyContractBTL.at(BTLcontractAddress);  
         
-        var totalATH = new Odometer({ el: $('.totalATH')[0], value: 300,  format: '(ddd.ddd)' });
-        totalATH.render();
-        totalATH.update(warriorsATH);
+
+   
+ var bar = new ProgressBar.Circle(btltoken, {
+            color: '#fff',
+            // This has to be the same size as the maximum width to
+            // prevent clipping
+            strokeWidth: 4,
+            trailWidth: 1,
+            easing: 'easeInOut',
+            duration: 3000,
+            text: {
+                autoStyleContainer: false
+            },
+            from: { color: '#97430c', width: 1 },
+            to: { color: '#d90000', width: 4 },
+            // Set default step function for all animate calls
+            step: function (state, circle) {
+                circle.path.setAttribute('stroke', state.color);
+                circle.path.setAttribute('stroke-width', state.width);
+
+                var value = Math.round(circle.value() * 100);
+                if (value === 0) {
+                    circle.setText('');
+                } else {
+                    circle.setText(value + "%");
+                }
+
+            }
+        });
+
+
+        updateWarriors();
+        setInterval(function () { updateWarriors(); }, 10000);
+
+
+function updateBattleToken(val){
+   
+        bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+        bar.text.style.fontSize = '3rem';
+        bar.set(0);
+        bar.animate(val);  // Number from 0.0 to 1.0
+}
+        function updateWarriors() {
+
+            var warriorsPRS = myContractInstance.warriorsOnTheBattlefield(addressPRS).toString(10);
+            var warriorsIMT = myContractInstance.warriorsOnTheBattlefield(addressIMT).toString(10);
+            var warriors300 = myContractInstance.warriorsOnTheBattlefield(address300).toString(10);
+            var warriorsATH = myContractInstance.warriorsOnTheBattlefield(addressATH).toString(10);
+
+
+            odometerOptions = { auto: false }; // Disables auto-initialization
+
+            // For each odometer, initialize with the theme passed in:
+            var totalPRS = new Odometer({ el: $('.totalPRS')[0], value: 300000, format: '(ddd.ddd)' });
+            totalPRS.render();
+            //debugger;
+            totalPRS.update(300000);
+            totalPRS.update(warriorsPRS.slice(0, warriorsPRS.length - 9) / 1000000000);
+
+
+            var totalIMT = new Odometer({ el: $('.totalIMT')[0], value: 300, format: '(ddd.ddd)' });
+            totalIMT.render();
+            totalIMT.update(300);
+            totalIMT.update(warriorsIMT);
+
+            //   $("#totalIMT").html(warriorsIMT);
+
+
+            var total300 = new Odometer({ el: $('.total300')[0], value: 300, format: '(ddd.ddd)' });
+            total300.render();
+            total300.update(300);
+            total300.update(warriors300.slice(0, warriors300.length - 9) / 1000000000);
+
+
+            var totalATH = new Odometer({ el: $('.totalATH')[0], value: 300, format: '(ddd.ddd)' });
+            totalATH.render();
+            totalATH.update(300);
+            totalATH.update(warriorsATH);
 
 
 
+            $("#winner").html(myContractInstance.getTemporaryWinningFaction())
+
+        var btlTokenBalance = myContractInstanceBTL.balanceOf('0xea03ee7110fafb324d4a931979ef4578bffb6a00').toString(10)
+        btlTokenBalance = btlTokenBalance.slice(0, btlTokenBalance.length - 9) / 1000000000;
+        btlTokenBalance =  (parseInt((btlTokenBalance/ 1000000)*100) )
+
+
+            updateBattleToken(0 + "." + btlTokenBalance)
+        }
         //	debugger;
         //    $("#winner").html("Winner: " + myContractInstance.getWinningFaction());
 
@@ -274,8 +364,7 @@ odometerOptions = { auto: false }; // Disables auto-initialization
 
         //var deadline = new Date(Date.parse(new Date(2017,10,18)) + 6 * 1 * 60 * 60 * 1000);
         var deadline = new Date(2017, 9, 24);
-        initializeClock('clockdiv', deadline);
-
+        //initializeClock('clockdiv', deadline);
     </script>
 
 

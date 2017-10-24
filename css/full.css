@@ -176,6 +176,17 @@ p{
 
 /* Header Image Background - Change the URL below to your image path (example: ../images/background.jpg) */
 
+
+#btltoken {
+  margin: 10px 20px 20px 20px;
+  width: 200px;
+  height: 200px;
+  position: relative;
+    background-image:  url(../img/battle-token.png);
+   background-size: 200px 200px;
+}
+
+
 .full {
     background: url(../img/battle/header.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
