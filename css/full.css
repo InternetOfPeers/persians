@@ -12,6 +12,9 @@
 .fl-lt {float:left;}
 .fl-rt {float:right;}
 
+.jumbotron{
+	padding: 5px;
+}
 /* Clear Floated Elements
 ---------------------------------*/
 .clear {
