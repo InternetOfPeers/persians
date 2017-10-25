@@ -37,6 +37,7 @@
     <link href="css/full.css" rel="stylesheet">
 
     <link rel="stylesheet" href="css/odometer-theme-plaza.css" />
+    <link rel="stylesheet" href="css/odometer-theme-btl.css" />
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -73,10 +74,10 @@
             <div class="col-md-12 text-center">
                 <div class="title" style="color:red"> Battle of Thermopylae
                     <div class="title-footer">
-  
+
                         <a href="http://persians.network/#battle" style="color:white">Join the Battle</a></div>
-                         
-                    
+
+
                 </div>
             </div>
         </div>
@@ -124,7 +125,6 @@
                 <br>
                 <img src="img/battle/vs.png">
 
-                <div class="col-md-12 text-center"><br><span style="color:bisque; font-weight: bold;">Battle Token available:</span> <div  id="btltoken"></div></div>
 
 
             </div>
@@ -154,9 +154,25 @@
 
         <div class="row text-center" style="background-color:rgba(0, 0, 0, 0.5);padding-bottom:20pt">
             <div class="row">
-                <div class="col-md-12 text-center title-footer">Battle is open!!</div>
-                <div class="col-md-12 text-center title-footer" id="winner"></div>
-              
+                <div class="col-md-5 text-center"></div>
+                <div class="col-md-1 text-center"> <img src="img/battle/btl-token.png"></div>
+                <div class="col-md-1 text-center"><span style="color:bisque; font-weight: bold;"><br>Battle Token available:</span>
+                   
+                    <a href="https://etherscan.io/token/0x2accab9cb7a48c3e82286f0b2f8798d201f4ec3f#balances" target="_blank">
+                        <span style="color:bisque; font-weight: bold;">
+                        <div class="totalBTL"></div></span>
+                    </a>
+                     <br> <br>
+                </div>
+                <div class="col-md-5 text-center"></div>
+                <!--  <div class="col-md-12 text-center title-footer">Battle is open!!</div> -->
+                <div class="col-md-12 text-center title-footer">
+                    <div id="winner"></div>
+                   
+                </div>
+
+
+
             </div>
             <!-- 
             <div id="clockdiv">
@@ -192,8 +208,6 @@
     <script src="js/odometer.js"></script>
     <script src="js/progressbar.js"></script>
     <script>
-       
-
         var Web3 = require('web3');
         var web3 = new Web3();
         web3.setProvider(new web3.providers.HttpProvider("https://mainnet.infura.io"));
@@ -210,53 +224,27 @@
         var myContractInstance = MyContract.at(contractAddress);
 
 
-        var abiBTLToken = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"},{"name":"_extraData","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"_battleAddress","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_spender","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Approval","type":"event"}];
+        var abiBTLToken = [{ "constant": true, "inputs": [], "name": "name", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_spender", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "approve", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "totalSupply", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_from", "type": "address" }, { "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transferFrom", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "decimals", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [{ "name": "_owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "balance", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "symbol", "outputs": [{ "name": "", "type": "string" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transfer", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [{ "name": "_spender", "type": "address" }, { "name": "_value", "type": "uint256" }, { "name": "_extraData", "type": "bytes" }], "name": "approveAndCall", "outputs": [{ "name": "success", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "_owner", "type": "address" }, { "name": "_spender", "type": "address" }], "name": "allowance", "outputs": [{ "name": "remaining", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "inputs": [{ "name": "_battleAddress", "type": "address" }], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "_from", "type": "address" }, { "indexed": true, "name": "_to", "type": "address" }, { "indexed": false, "name": "_value", "type": "uint256" }], "name": "Transfer", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "_owner", "type": "address" }, { "indexed": true, "name": "_spender", "type": "address" }, { "indexed": false, "name": "_value", "type": "uint256" }], "name": "Approval", "type": "event" }];
         var BTLcontractAddress = "0x2accaB9cb7a48c3E82286F0b2f8798D201F4eC3f";
         var MyContractBTL = web3.eth.contract(abiBTLToken);
-        var myContractInstanceBTL = MyContractBTL.at(BTLcontractAddress);  
-        
+        var myContractInstanceBTL = MyContractBTL.at(BTLcontractAddress);
 
-   
- var bar = new ProgressBar.Circle(btltoken, {
-            color: '#fff',
-            // This has to be the same size as the maximum width to
-            // prevent clipping
-            strokeWidth: 4,
-            trailWidth: 1,
-            easing: 'easeInOut',
-            duration: 3000,
-            text: {
-                autoStyleContainer: false
-            },
-            from: { color: '#97430c', width: 1 },
-            to: { color: '#d90000', width: 4 },
-            // Set default step function for all animate calls
-            step: function (state, circle) {
-                circle.path.setAttribute('stroke', state.color);
-                circle.path.setAttribute('stroke-width', state.width);
 
-                var value = Math.round(circle.value() * 100);
-                if (value === 0) {
-                    circle.setText('');
-                } else {
-                    circle.setText(value + "%");
-                }
 
-            }
-        });
+
 
 
         updateWarriors();
-        setInterval(function () { updateWarriors(); }, 10000);
+        //  setInterval(function () { updateWarriors(); }, 10000);
 
 
-function updateBattleToken(val){
-   
-        bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
-        bar.text.style.fontSize = '3rem';
-        bar.set(0);
-        bar.animate(val);  // Number from 0.0 to 1.0
-}
+        function updateBattleToken(val) {
+
+            bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+            bar.text.style.fontSize = '3rem';
+            bar.set(0);
+            bar.animate(val);  // Number from 0.0 to 1.0
+        }
         function updateWarriors() {
 
             var warriorsPRS = myContractInstance.warriorsOnTheBattlefield(addressPRS).toString(10);
@@ -298,12 +286,18 @@ function updateBattleToken(val){
 
             $("#winner").html(myContractInstance.getTemporaryWinningFaction())
 
-        var btlTokenBalance = myContractInstanceBTL.balanceOf('0xea03ee7110fafb324d4a931979ef4578bffb6a00').toString(10)
-        btlTokenBalance = btlTokenBalance.slice(0, btlTokenBalance.length - 9) / 1000000000;
-        btlTokenBalance =  (parseInt((btlTokenBalance/ 1000000)*100) )
+            var btlTokenBalance = myContractInstanceBTL.balanceOf('0xea03ee7110fafb324d4a931979ef4578bffb6a00').toString(10)
+            btlTokenBalance = btlTokenBalance.slice(0, btlTokenBalance.length - 9) / 1000000000;
+            // btlTokenBalance =  (parseInt((btlTokenBalance/ 1000000)*100) )
+
+            var totalBTL = new Odometer({ el: $('.totalBTL')[0], value: 999.999, format: '(ddd.ddd)', theme: 'btl' });
+            totalBTL.render();
+            totalBTL.update(300);
+            totalBTL.update(btlTokenBalance);
 
 
-            updateBattleToken(0 + "." + btlTokenBalance)
+
+            // updateBattleToken(0 + "." + btlTokenBalance)
         }
         //	debugger;
         //    $("#winner").html("Winner: " + myContractInstance.getWinningFaction());
