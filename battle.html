@@ -41,9 +41,9 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
 
 </head>
 
@@ -51,31 +51,34 @@
     <div class="jumbotron">
         <!--   <div class="row" style="display:none">
 
-            <div class="col-md-1 text-right"><img src="img/battle/PRS_Badge.png"></div>
-            <div class="col-md-2  text-center">
-                <h2>Persian Token</h2><button type="button" class="btn btn-success">Send</button></div>
-            <div class="col-md-1"><img src="img/battle/IMT_Badge.png"> </div>
-            <div class="col-md-2 text-center">
-                <h2>Immortal Token</h2><button type="button" class="btn btn-success">Send</button></div>
+<div class="col-md-1 text-right"><img src="img/battle/PRS_Badge.png"></div>
+<div class="col-md-2  text-center">
+<h2>Persian Token</h2><button type="button" class="btn btn-success">Send</button></div>
+<div class="col-md-1"><img src="img/battle/IMT_Badge.png"> </div>
+<div class="col-md-2 text-center">
+<h2>Immortal Token</h2><button type="button" class="btn btn-success">Send</button></div>
 
 
 
-            <div class="col-md-1"><img src="img/battle/300_Badge.png"> </div>
-            <div class="col-md-2  text-center">
-                <h2>300 Token</h2> <button type="button" class="btn btn-success">Send</button></div>
-            <div class="col-md-1"><img src="img/battle/ATH_Badge.png"></div>
-            <div class="col-md-2  text-center">
-                <h2>Athenian Token</h2> <button type="button" class="btn btn-success">Send</button></div>
+<div class="col-md-1"><img src="img/battle/300_Badge.png"> </div>
+<div class="col-md-2  text-center">
+<h2>300 Token</h2> <button type="button" class="btn btn-success">Send</button></div>
+<div class="col-md-1"><img src="img/battle/ATH_Badge.png"></div>
+<div class="col-md-2  text-center">
+<h2>Athenian Token</h2> <button type="button" class="btn btn-success">Send</button></div>
 
-        </div>
+</div>
 
-        -->
+-->
         <div class="row" style="background-color:rgba(0, 0, 0, 0.5);padding-bottom:20pt;">
             <div class="col-md-12 text-center">
                 <div class="title" style="color:red"> Battle of Thermopylae
                     <div class="title-footer">
 
-                        <a href="http://persians.network/#battle" style="color:white">Join the Battle</a></div>
+                        <a href="http://persians.network/#battle" style="color:white">
+                            <div id="winner"></div>
+                        </a>
+                    </div>
 
 
                 </div>
@@ -84,118 +87,96 @@
 
         <div class="row" style="background-color:rgba(0, 0, 0, 0.5); color:red">
             <div class="col-sm-2 text-center">
-                <div class="thumbnail">
-                    <img src="img/battle/IMT_Badge.png" alt="..." />
-                    <div class="wrapper">
-                        <div class="caption post-content">
-
-                            <h2>
-                                <a href="https://etherscan.io/token/0x22E5F62D0FA19974749faa194e3d3eF6d89c08d7?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
-                                    target="_blank">
+                <a href="https://etherscan.io/token/0x22E5F62D0FA19974749faa194e3d3eF6d89c08d7?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
+                    target="_IMT">
+                    <div class="thumbnail">
+                        <img src="img/battle/IMT_Badge.png" alt="..." />
+                        <div class="wrapper">
+                            <div class="caption post-content">
+                                <h2>
                                     <div class="totalIMT"></div>
-                                </a>
-                            </h2>
-
+                                </h2>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-sm-3 text-center">
-                <div class="thumbnail">
-                    <img src="img/battle/PRS_Badge.png" alt="..." />
-                    <div class="wrapper">
-                        <div class="caption post-content">
-
-                            <h2>
-                                <a href="https://etherscan.io/token/0x163733bcc28dbf26b41a8cfa83e369b5b3af741b?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
-                                    target="_blank">
+                <a href="https://etherscan.io/token/0x163733bcc28dbf26b41a8cfa83e369b5b3af741b?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
+                    target="_blank">
+                    <div class="thumbnail">
+                        <img src="img/battle/PRS_Badge.png" alt="..." />
+                        <div class="wrapper">
+                            <div class="caption post-content">
+                                <h2>
                                     <div class="totalPRS"></div>
-                                </a>
-                            </h2>
-
+                                </h2>
+                            </div>
                         </div>
                     </div>
-                </div>
-
+                </a>
             </div>
 
             <div class="col-sm-2 text-center">
                 <br>
                 <br>
                 <br>
+                <a href="https://etherscan.io/address/0x553b4546d26f383d4f4a056b7f50dadff07fb252" target="_btlContract">
                 <img src="img/battle/vs.png">
-
+</a>
 
 
             </div>
             <div class="col-sm-3 text-center">
-                <img src="img/battle/300_Badge.png">
-                <h2>
-                    <a href="https://etherscan.io/token/0xaec98a708810414878c3bcdf46aad31ded4a4557?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
-                        target="_blank">
-                        <div class="total300"></div>
+                <a href="https://etherscan.io/token/0xaec98a708810414878c3bcdf46aad31ded4a4557?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
+                    target="_300"><img src="img/battle/300_Badge.png">
+                    <h2><div class="total300"></div></h2>
                     </a>
-
-                </h2>
-
             </div>
             <div class="col-sm-2 text-center">
-                <img src="img/battle/ATH_Badge.png">
-                <h2>
-                    <a href="https://etherscan.io/token/0xe3d898170d1f56a78e9757a89402bb4de056a8c5?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
-                        target="_blank">
-                        <div class="totalATH"></div>
-                    </a>
-
-                </h2>
-
+                <a href="https://etherscan.io/token/0xe3d898170d1f56a78e9757a89402bb4de056a8c5?a=0x553b4546d26f383d4f4a056b7f50dadff07fb252"
+                    target="_blank"><img src="img/battle/ATH_Badge.png">
+                <h2><div class="totalATH"></div></h2></a>
             </div>
         </div>
 
         <div class="row text-center" style="background-color:rgba(0, 0, 0, 0.5);padding-bottom:20pt">
             <div class="row">
-                
+
                 <div class="col-md-5 text-center"></div>
                 <a href="https://etherscan.io/token/0x2accab9cb7a48c3e82286f0b2f8798d201f4ec3f" target="_blank">
-                <div class="col-md-1 text-center"> <img src="img/battle/btl-token.png"></div>
-                <div class="col-md-1 text-center"><span style="color:bisque; font-weight: bold;"><br>Battle Token available:</span>
-                   
-                    
+                    <div class="col-md-1 text-center"> <img src="img/battle/btl-token.png"></div>
+                    <div class="col-md-1 text-center"><span style="color:#9d683e; font-weight: bold;"><br>Battle Token available:</span>
                         <span style="color:bisque; font-weight: bold;">
-                        <div class="totalBTL"></div></span>
-                   
-                     <br> <br>
-                </div>
-                 </a>
+<br><div class="totalBTL"></div></span>
+                    </div>
+                </a>
                 <div class="col-md-5 text-center"></div>
                 <!--  <div class="col-md-12 text-center title-footer">Battle is open!!</div> -->
-                <div class="col-md-12 text-center title-footer">
-                    <div id="winner"></div>
-                   
-                </div>
+
 
 
 
             </div>
             <!-- 
-            <div id="clockdiv">
-                <div>
-                    <span class="days">2</span>
-                    <div class="smalltext">Days</div>
-                </div>
-                <div>
-                    <span class="hours">10</span>
-                    <div class="smalltext">Hours</div>
-                </div>
-                <div>
-                    <span class="minutes">25</span>
-                    <div class="smalltext">Minutes</div>
-                </div>
-                <div>
-                    <span class="seconds">36</span>
-                    <div class="smalltext">Seconds</div>
-                </div>
-            </div>
+<div id="clockdiv">
+<div>
+<span class="days">2</span>
+<div class="smalltext">Days</div>
+</div>
+<div>
+<span class="hours">10</span>
+<div class="smalltext">Hours</div>
+</div>
+<div>
+<span class="minutes">25</span>
+<div class="smalltext">Minutes</div>
+</div>
+<div>
+<span class="seconds">36</span>
+<div class="smalltext">Seconds</div>
+</div>
+</div>
 -->
         </div>
     </div>
@@ -361,7 +342,7 @@
 
         //var deadline = new Date(Date.parse(new Date(2017,10,18)) + 6 * 1 * 60 * 60 * 1000);
         var deadline = new Date(2017, 9, 24);
-        //initializeClock('clockdiv', deadline);
+//initializeClock('clockdiv', deadline);
     </script>
 
 
