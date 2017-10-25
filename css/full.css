@@ -80,16 +80,17 @@ a, a:hover, a:active{ color:#d4bc75; outline:0px !important}
 }
 
 #clockdiv > div{
-    padding: 10px;
+    padding: 20px;
     border-radius: 3px;
-    background: #1f1f1f;
+    /* background: #1f1f1f; */
     display: inline-block;
 }
 
 #clockdiv div > span{
-    padding: 15px;
-    border-radius: 3px;
-    background: #bb3331;
+    padding: 5px;
+    border-radius: 6px;
+    background: #d90000;
+	width: 45px;
     display: inline-block;
 }
 
