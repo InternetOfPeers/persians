@@ -63,7 +63,7 @@
                     <div class="title-footer">
 
                         <a href="http://persians.network/#battle" style="color:white">
-                           The winner faction are <div id="winner"></div>
+                            Persians are winning!
                         </a>
                     </div>
 
@@ -113,7 +113,7 @@
 </a>
                 <div class="row">
                     <br>
-                   <h2>Battle End in:</h3>
+                   <h2>Battle is over:</h3>
                         <!-- <div id="clockdiv">
                             <div class="col-sm-3 text-center">
                                 <span class="days"></span>
@@ -254,7 +254,7 @@
 
 
 
-            $("#winner").html(myContractInstance.getWinningFaction())
+           // $("#winner").html(myContractInstance.getWinningFaction())
 
             var btlTokenBalance = myContractInstanceBTL.balanceOf('0xea03ee7110fafb324d4a931979ef4578bffb6a00').toString(10)
             btlTokenBalance = btlTokenBalance.slice(0, btlTokenBalance.length - 9) / 1000000000;
