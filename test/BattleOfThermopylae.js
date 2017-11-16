@@ -1,6 +1,7 @@
 'use strict'
 
-const Battle = artifacts.require('./Battle.sol');
+const BattleOfThermopylae = artifacts.require('./BattleOfThermopylae.sol');
+const BattleToken = artifacts.require('./BattleToken.sol');
 const SimpleToken = artifacts.require("./SimpleToken.sol");
 const assertException = require('./helpers/assertException');
 
@@ -10,12 +11,13 @@ const assertException = require('./helpers/assertException');
     // result.receipt => receipt object
 */
 
-contract('Battle', function (accounts) {
+contract('BattleOfThermopylae', function (accounts) {
 
     const NOW = Math.floor(new Date().getTime() / 1000);
     const YESTERDAY = NOW - (3600 * 24);
     const WAD = Math.pow(10, 18);
 
+    const owner = accounts[0];            // Contract's owner
     const persian_1 = accounts[1];        // 150.000 Persians
     const persian_2 = accounts[2];        // 120.000 Persians
     const immortal_1 = accounts[3];       //      50 Immortals
@@ -24,19 +26,16 @@ contract('Battle', function (accounts) {
     const spartan_2 = accounts[6];        //     120 Spartans
     const athenian_1 = accounts[7];       //      50 Athenians
     const athenian_2 = accounts[8];       //      40 Athenians
-    const all_warriors_1 = accounts[9];   // 130.000 Persians
-    //     110 Immortals
-    //     130 Spartans
-    //     110 Athenians
+    const all_warriors_1 = accounts[9];   // 130.000 Persians, 110 Immortals, 130 Spartans, 110 Athenians
 
     const BP_PERSIAN = 1;                 //     1 Battle Point
     const BP_IMMORTAL = 100;              //   100 Battle Points
     const BP_SPARTAN = 1000;              // 1.000 Battle Points
     const BP_ATHENIAN = 100;              //   100 Battle Points
 
-    var battle, persians, immortals, spartans, athenians;   // Contract instances
+    var battle, persians, immortals, spartans, athenians, battleToken;   // Contract instances
 
-    before("Distribute all tokens and deploy battle contract", function () {
+    async function initContracts() {
         return SimpleToken.new("Persian", "PRS", 18, 300000 * WAD + 100000 * WAD).then(function (instance) {
             persians = instance;
             persians.transfer(persian_1, 150000 * WAD);
@@ -67,10 +66,20 @@ contract('Battle', function (accounts) {
             let startBattle = NOW;
             let endBattle = startBattle + (60 * 60 * 24);
             let avarageBlockTime = 24;
-            return Battle.new(startBattle, endBattle, avarageBlockTime, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
-                battle = instance;
+            return BattleOfThermopylae.new(startBattle, endBattle, avarageBlockTime, persians.address, immortals.address, spartans.address, athenians.address).then(function (instance) {
+                return battle = instance;
             });
+        }).then(function () {
+            return BattleToken.new(battle.address).then(function (instance) {
+                return battleToken = instance;
+            });
+        }).then(function () {
+            return battle.setBattleTokenAddress(battleToken.address, owner);
         });
+    }
+
+    before("Distribute all tokens and deploy battle contract", async function () {
+        await initContracts();
     });
 
     describe("Battle is open!", async function () {
@@ -1552,5 +1561,5 @@ contract('Battle', function (accounts) {
         await immortals.approve(battle.address, 2, { from: all_warriors_1 });
         await battle.assignImmortalsToBattle(2, { from: all_warriors_1 });
     }
-    
+
 });
