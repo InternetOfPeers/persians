@@ -1,4 +1,4 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.4.18;
 
 import "./ImmortalToken.sol";
 
@@ -8,7 +8,7 @@ contract Immortals is ImmortalToken {
 
     event Assigned(address _contributor, uint256 _immortals);
 
-    function () payable {
+    function () payable external {
 		//Assign immortals based on ethers sent
         require(tokenAssigned < totalSupply && msg.value >= 0.5 ether);
 		uint256 immortals = msg.value / 0.5 ether;

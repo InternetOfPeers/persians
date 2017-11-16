@@ -1,4 +1,4 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.4.18;
 
 import "./SafeMathLib.sol";
 
@@ -7,11 +7,11 @@ contract TestLib {
     
     uint256 readme = 1;
 
-    function TestLib() {
+    function TestLib() public {
         readme = readme.add(3);
     }
 
-    function getReadme() constant returns (uint256) {
+    function getReadme() public view returns (uint256) {
         return readme;
     }
 }

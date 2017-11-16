@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.18;
 
 import "./Owned.sol";
 
@@ -14,7 +14,7 @@ contract Upgradable is Owned {
     address public newAddress;
     uint    public timestamp;
 
-    function Upgradable(string _version)  {
+    function Upgradable(string _version) public {
         VERSION = _version;
     }
 

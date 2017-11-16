@@ -1,4 +1,4 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.4.18;
 
 contract Timed {
     
@@ -7,12 +7,12 @@ contract Timed {
     uint256 public avarageBlockTime;    //seconds
 
     // This check is an helper function for ÐApp to check the effect of the NEXT transaction, NOT simply the current state of the contract
-    function isInTime() constant returns (bool inTime) {
+    function isInTime() public view returns (bool inTime) {
         return block.timestamp >= (startTime - avarageBlockTime) && !isTimeExpired();
     }
 
     // This check is an helper function for ÐApp to check the effect of the NEXT transacion, NOT simply the current state of the contract
-    function isTimeExpired() constant returns (bool timeExpired) {
+    function isTimeExpired() public view returns (bool timeExpired) {
         return block.timestamp + avarageBlockTime >= endTime;
     }
 
@@ -24,7 +24,7 @@ contract Timed {
         require(block.timestamp > endTime); _;
     }
 
-    function Timed(uint256 _startTime, uint256 life, uint8 _avarageBlockTime) {
+    function Timed(uint256 _startTime, uint256 life, uint8 _avarageBlockTime) public {
         startTime = _startTime;
         endTime = _startTime + life;
         avarageBlockTime = _avarageBlockTime;

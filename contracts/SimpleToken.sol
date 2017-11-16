@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.18;
 
 import "./Owned.sol";
 import "./TokenEIP20.sol";
@@ -17,7 +17,7 @@ contract SimpleToken is Owned, TokenEIP20 {
     uint256 public decimals;
     uint256 public totalSupply;
 
-    function SimpleToken(string _name, string _symbol, uint256 _decimals, uint256 _totalSupply) {
+    function SimpleToken(string _name, string _symbol, uint256 _decimals, uint256 _totalSupply) public {
         name = _name;
         symbol = _symbol;
         decimals = _decimals;
@@ -25,7 +25,7 @@ contract SimpleToken is Owned, TokenEIP20 {
         balances[owner] = totalSupply;
     }
 
-    function transfer(address _to, uint256 _value) returns (bool success) {
+    function transfer(address _to, uint256 _value) public returns (bool success) {
         if (balances[msg.sender] < _value) {
             return false;
         }
@@ -37,7 +37,7 @@ contract SimpleToken is Owned, TokenEIP20 {
         return true;
     }
 
-    function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         if (balances[_from] < _value || allowed[_from][msg.sender] < _value) {
             return false;
         }
@@ -50,13 +50,13 @@ contract SimpleToken is Owned, TokenEIP20 {
         return true;
     }
 
-    function approve(address _spender, uint256 _value) returns (bool success) {
+    function approve(address _spender, uint256 _value) public returns (bool success) {
         allowed[msg.sender][_spender] = _value;
         Approval(msg.sender, _spender, _value);
         return true;
     }
 
-    function approveAndCall(address _spender, uint256 _value, bytes _extraData) returns (bool success) {
+    function approveAndCall(address _spender, uint256 _value, bytes _extraData) public returns (bool success) {
         if (!approve(_spender, _value)) {
             return false;
         }
@@ -64,11 +64,11 @@ contract SimpleToken is Owned, TokenEIP20 {
         return true;
     }
 
-    function balanceOf(address _owner) constant returns (uint256 balance) {
+    function balanceOf(address _owner) public view returns (uint256 balance) {
         return balances[_owner];
     }
 
-    function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
         return allowed[_owner][_spender];
     }
 }

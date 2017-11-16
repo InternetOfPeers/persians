@@ -1,4 +1,7 @@
+'use strict'
+
 var Immortals = artifacts.require('./Immortals.sol');
+const assertException = require('./helpers/assertException');
 
 /*
     // result.tx => transaction hash, string
@@ -14,7 +17,7 @@ contract('Immortals', function (accounts) {
             instance.send(web3.toWei(0.4999, 'ether'))
                 .then(assert.fail)
                 .catch(function (error) {
-                    assert(error.message.indexOf('invalid opcode') >= 0, 'it should have thrown an exception because too few ethers were sent');
+                    assertException(error, 'it should have thrown an exception because too few ethers were sent');
                 });
             //should be fine with 0.5 or more
             instance.send(web3.toWei(0.5, 'ether'))
@@ -41,11 +44,11 @@ contract('Immortals', function (accounts) {
                 assert.equal(balance.valueOf(), 2, 'it should have gained 2 immortal');
             });
 
-            instance.sendTransaction({ from: accounts[4], value: web3.toWei(1.2, 'ether') }).then(function() {
+            instance.sendTransaction({ from: accounts[4], value: web3.toWei(1.2, 'ether') }).then(function () {
                 instance.balanceOf.call(accounts[4]).then(function (balance) {
                     assert.equal(balance.valueOf(), 2, 'it should have gained 2 immortal');
                 });
-                instance.sendTransaction({ from: accounts[4], value: web3.toWei(1.2, 'ether') }).then(function() {
+                instance.sendTransaction({ from: accounts[4], value: web3.toWei(1.2, 'ether') }).then(function () {
                     instance.balanceOf.call(accounts[4]).then(function (balance) {
                         assert.equal(balance.valueOf(), 4, 'it should have gained a grand total of 4 immortal');
                     });
@@ -56,7 +59,7 @@ contract('Immortals', function (accounts) {
 
     it('should count token already assigned', function () {
         return Immortals.new().then(function (instance) {
-            instance.sendTransaction({ from: accounts[1], value: web3.toWei(1.26, 'ether') }).then(function(){
+            instance.sendTransaction({ from: accounts[1], value: web3.toWei(1.26, 'ether') }).then(function () {
                 instance.sendTransaction({ from: accounts[1], value: web3.toWei(1.76, 'ether') });
                 instance.tokenAssigned().then(function (tokenAssigned) {
                     assert.equal(tokenAssigned.valueOf(), 5, 'it should have gained 5 immortal');
@@ -71,7 +74,7 @@ contract('Immortals', function (accounts) {
             instance.sendTransaction({ from: accounts[1], value: web3.toWei(1.76, 'ether') })
                 .then(assert.fail)
                 .catch(function (error) {
-                    assert(error.message.indexOf('invalid opcode') >= 0, 'it should have thrown an exception because there are no more tokens');
+                    assertException(error, 'it should have thrown an exception because there are no more tokens');
                 });
         });
     });
@@ -109,7 +112,7 @@ contract('Immortals', function (accounts) {
         });
     });
 
-    it('owner should be able to redeem ethers', function() {
+    it('owner should be able to redeem ethers', function () {
         return Immortals.new().then(function (instance) {
             var owner = accounts[0];
             var sender = accounts[1];
@@ -119,7 +122,7 @@ contract('Immortals', function (accounts) {
                     var contractBalance = web3.eth.getBalance(instance.address);
                     assert.equal(contractBalance.valueOf(), amount, 'contract balance should be 1.5 ether');
                     var previousOwnerBalance = web3.eth.getBalance(owner);
-                    instance.redeemEther(amount).then(function(result){
+                    instance.redeemEther(amount).then(function (result) {
                         contractBalance = web3.eth.getBalance(instance.address);
                         assert.equal(contractBalance.valueOf(), 0, 'contract balance should be 0 ether');
                         var currentOwnerBalance = web3.eth.getBalance(owner);

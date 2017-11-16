@@ -1,4 +1,4 @@
-pragma solidity ^0.4.13;
+pragma solidity ^0.4.18;
 
 import "./Owned.sol";
 import "./SafeMath.sol";
@@ -16,7 +16,7 @@ contract ImmortalToken is Owned, SafeMath, TokenERC20 {
     string public constant symbol = "IMT";
     string public constant version = "1.0.1";
 
-    function transfer(address _to, uint256 _value) returns (bool success) {
+    function transfer(address _to, uint256 _value) public returns (bool success) {
         if (balances[msg.sender] < _value) {
             return false;
         }
@@ -28,7 +28,7 @@ contract ImmortalToken is Owned, SafeMath, TokenERC20 {
         return true;
     }
 
-    function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         if (balances[_from] < _value || allowed[_from][msg.sender] < _value) {
             return false;
         }
@@ -41,13 +41,13 @@ contract ImmortalToken is Owned, SafeMath, TokenERC20 {
         return true;
     }
 
-    function approve(address _spender, uint256 _value) returns (bool success) {
+    function approve(address _spender, uint256 _value) public returns (bool success) {
         allowed[msg.sender][_spender] = _value;
         Approval(msg.sender, _spender, _value);
         return true;
     }
 
-    function approveAndCall(address _spender, uint256 _value, bytes _extraData) returns (bool success) {
+    function approveAndCall(address _spender, uint256 _value, bytes _extraData) public returns (bool success) {
         if (!approve(_spender, _value)) {
             return false;
         }
@@ -55,11 +55,11 @@ contract ImmortalToken is Owned, SafeMath, TokenERC20 {
         return true;
     }
 
-    function balanceOf(address _owner) constant returns (uint256 balance) {
+    function balanceOf(address _owner) public view returns (uint256 balance) {
         return balances[_owner];
     }
 
-    function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
         return allowed[_owner][_spender];
     }
 }

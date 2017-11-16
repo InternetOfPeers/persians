@@ -50,7 +50,7 @@ battle with other Warrior tokens holders, for profit or just for fun!
         0x17052d51E954592C1046320c2371AbaB6C73Ef10      Athenians   (ATH)
 
 *******************************************************************************/
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.18;
 
 import "./TokenERC20.sol";
 import "./Timed.sol";
@@ -85,7 +85,7 @@ contract Battle is Timed, Upgradable {
     event WarriorsAssignedToBattlefield (address indexed _from, address _faction, uint _battlePointsIncrementForecast);
     event WarriorsBackToHome            (address indexed _to, address _faction, uint _survivedWarriors);
 
-    function Battle(uint _startTime, uint _life, uint8 _avarageBlockTime, address _persians, address _immortals, address _spartans, address _athenians) Timed(_startTime, _life, _avarageBlockTime) Upgradable("1.0.0") {
+    function Battle(uint _startTime, uint _life, uint8 _avarageBlockTime, address _persians, address _immortals, address _spartans, address _athenians) Timed(_startTime, _life, _avarageBlockTime) Upgradable("1.0.0") public {
         persians = _persians;
         immortals = _immortals;
         spartans = _spartans;
@@ -182,39 +182,39 @@ contract Battle is Timed, Upgradable {
 
     /*** CONSTANT FUNCTIONS AND DAPP HELPERS ***/
 
-    function getPersiansOnTheBattlefield(address _player) constant returns (uint persiansOnTheBattlefield) {
+    function getPersiansOnTheBattlefield(address _player) view public returns (uint persiansOnTheBattlefield) {
         return warriorsByPlayer[_player][persians];
     }
 
-    function getImmortalsOnTheBattlefield(address _player) constant returns (uint immortalsOnTheBattlefield) {
+    function getImmortalsOnTheBattlefield(address _player) view public returns (uint immortalsOnTheBattlefield) {
         return warriorsByPlayer[_player][immortals];
     }
 
-    function getSpartansOnTheBattlefield(address _player) constant returns (uint spartansOnTheBattlefield) {
+    function getSpartansOnTheBattlefield(address _player) view public returns (uint spartansOnTheBattlefield) {
         return warriorsByPlayer[_player][spartans];
     }
 
-    function getAtheniansOnTheBattlefield(address _player) constant returns (uint atheniansOnTheBattlefield) {
+    function getAtheniansOnTheBattlefield(address _player) view public returns (uint atheniansOnTheBattlefield) {
         return warriorsByPlayer[_player][athenians];
     }
 
-    function getPersiansBattlePoints() constant returns (uint persiansBattlePoints) {
+    function getPersiansBattlePoints() view public returns (uint persiansBattlePoints) {
         return (warriorsOnTheBattlefield[persians].mul(BP_PERSIAN) + warriorsOnTheBattlefield[immortals].mul(WAD).mul(BP_IMMORTAL));
     }
 
-    function getGreeksBattlePoints() constant returns (uint greeksBattlePoints) {
+    function getGreeksBattlePoints() view public returns (uint greeksBattlePoints) {
         return (warriorsOnTheBattlefield[spartans].mul(BP_SPARTAN) + warriorsOnTheBattlefield[athenians].mul(BP_ATHENIAN));
     }
 
-    function getPersiansBattlePointsBy(address _player) constant returns (uint playerBattlePoints) {
+    function getPersiansBattlePointsBy(address _player) view public returns (uint playerBattlePoints) {
         return (getPersiansOnTheBattlefield(_player).mul(BP_PERSIAN) + getImmortalsOnTheBattlefield(_player).mul(WAD).mul(BP_IMMORTAL));
     }
 
-    function getGreeksBattlePointsBy(address _player) constant returns (uint playerBattlePoints) {
+    function getGreeksBattlePointsBy(address _player) view public returns (uint playerBattlePoints) {
         return (getSpartansOnTheBattlefield(_player).mul(BP_SPARTAN) + getAtheniansOnTheBattlefield(_player).mul(BP_ATHENIAN));
     }
 
-    function computeSlaves(address _player, address _loosingMainTroops) constant returns (uint slaves) {
+    function computeSlaves(address _player, address _loosingMainTroops) view public returns (uint slaves) {
         if (_loosingMainTroops == spartans) {
             return getPersiansBattlePointsBy(_player).wdiv(getPersiansBattlePoints()).wmul(getTotalSlaves(spartans));
         } else {
@@ -222,23 +222,23 @@ contract Battle is Timed, Upgradable {
         }
     }
 
-    function getTotalSlaves(address _faction) constant returns (uint slaves) {
+    function getTotalSlaves(address _faction) view public returns (uint slaves) {
         return warriorsOnTheBattlefield[_faction].sub(warriorsOnTheBattlefield[_faction].wper(BATTLE_CASUALTIES));
     }
 
-    function isInProgress() constant returns (bool inProgress) {
+    function isInProgress() view public returns (bool inProgress) {
         return !isTimeExpired();
     }
 
-    function isEnded() constant returns (bool ended) {
+    function isEnded() view public returns (bool ended) {
         return isTimeExpired();
     }
 
-    function isDraw() constant returns (bool draw) {
+    function isDraw() view public returns (bool draw) {
         return (getPersiansBattlePoints() == getGreeksBattlePoints());
     }
 
-    function getTemporaryWinningFaction() constant returns (string temporaryWinningFaction) {
+    function getTemporaryWinningFaction() view public returns (string temporaryWinningFaction) {
         if (isDraw()) {
             return "It's currently a draw, but the battle is still in progress!";
         }
@@ -246,7 +246,7 @@ contract Battle is Timed, Upgradable {
             "Persians are winning, but the battle is still in progress!" : "Greeks are winning, but the battle is still in progress!";
     }
 
-    function getWinningFaction() constant returns (string winningFaction) {
+    function getWinningFaction() view public returns (string winningFaction) {
         if (isInProgress()) {
             return "The battle is still in progress";
         }
@@ -263,7 +263,7 @@ contract Battle is Timed, Upgradable {
     /**** REMOVE FOLLOWING FUNCTIONS BEFORE DEPLOY  *******/
     /****             REALLY!                       *******/
 
-    function setTime(uint _startTime, uint life, uint8 _avarageBlockTime) onlyOwner {
+    function setTime(uint _startTime, uint life, uint8 _avarageBlockTime) onlyOwner public {
         startTime = _startTime;
         endTime = _startTime + life;
         avarageBlockTime = _avarageBlockTime;
