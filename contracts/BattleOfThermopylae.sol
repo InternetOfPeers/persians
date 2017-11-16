@@ -1,5 +1,5 @@
 /*******************************************************************************
-**************************     BATTLE CONTRACT v1.1  ***************************
+*********************    BATTLE OF THERMOPYLAE v1.1  ***************************
 ********************************************************************************
 
 Battle smart contract is a platform/ecosystem for gaming built on top of a
@@ -44,20 +44,21 @@ battle with other Warrior tokens holders, for profit or just for fun!
 **************************      TOKEN ADDRESSES      ***************************
 ********************************************************************************
 
-        0x163733bcc28dbf26B41a8CfA83e369b5B3af741b      Persians    (PRS)
-        0x22E5F62D0FA19974749faa194e3d3eF6d89c08d7      Immortals   (IMT)
-        0xaEc98A708810414878c3BCDF46Aad31dEd4a4557      Spartans    (300)
-        0x17052d51E954592C1046320c2371AbaB6C73Ef10      Athenians   (ATH)
+        Persians    (PRS)   0x163733bcc28dbf26B41a8CfA83e369b5B3af741b
+        Immortals   (IMT)   0x22E5F62D0FA19974749faa194e3d3eF6d89c08d7
+        Spartans    (300)   0xaEc98A708810414878c3BCDF46Aad31dEd4a4557
+        Athenians   (ATH)   0x17052d51E954592C1046320c2371AbaB6C73Ef10
+        Battles     (BTL)   Set after the deployment of this contract
 
 *******************************************************************************/
 pragma solidity ^0.4.18;
 
-import "./TokenERC20.sol";
+import "./TokenEIP20.sol";
 import "./Timed.sol";
 import "./SafeMathLib.sol";
 import "./Upgradable.sol";
 
-contract Battle is Timed, Upgradable {
+contract BattleOfThermopylae is Timed, Upgradable {
     using SafeMathLib for uint;
   
     uint    public constant MAX_PERSIANS            = 300000 * 10**18;  // 300.000
@@ -65,19 +66,26 @@ contract Battle is Timed, Upgradable {
     uint    public constant MAX_IMMORTALS           = 100;              // 100
     uint    public constant MAX_ATHENIANS           = 100 * 10**18;     // 100
 
-    uint    public constant WAD                     = 10**18;           // Common decimal positions
     uint8   public constant BP_PERSIAN              = 1;                // Each Persian worths 1 Battle Point
     uint8   public constant BP_IMMORTAL             = 100;              // Each Immortal worths 100 Battle Points
     uint16  public constant BP_SPARTAN              = 1000;             // Each Spartan worths 1000 Battle Points
     uint8   public constant BP_ATHENIAN             = 100;              // Each Athenians worths 100 Battle Points
 
-    uint8   public constant BATTLE_POINT_DECIMALS   = 18;
+    uint8   public constant BTL_PERSIAN              = 1;               // Each Persian worths 1 Battle Token
+    uint16  public constant BTL_IMMORTAL             = 2000;            // Each Immortal worths 2000 Battle Tokens
+    uint16  public constant BTL_SPARTAN              = 1000;            // Each Spartan worths 1000 Battle Tokens
+    uint16  public constant BTL_ATHENIAN             = 2000;            // Each Athenians worths 2000 Battle Tokens
+
+    uint    public constant WAD                     = 10**18;           // Shortcut for 1.000.000.000.000.000.000
+    uint8   public constant BATTLE_POINT_DECIMALS   = 18;               // Battle points decimal positions
     uint8   public constant BATTLE_CASUALTIES       = 10;               // Percentage of Persian and Spartan casualties
     
     address public persians;                                            // Address of the Persian Tokens
     address public immortals;                                           // Address of the Immortal Tokens
     address public spartans;                                            // Address of the 300 Tokens
     address public athenians;                                           // Address of the Athenian Tokens
+    address public battles;                                             // Address of the Battle Tokens
+    address public battlesOwner;                                        // Owner of the Battle Token contract
 
     mapping (address => mapping (address => uint))   public  warriorsByPlayer;               // Troops currently allocated by each player
     mapping (address => uint)                        public  warriorsOnTheBattlefield;       // Total troops fighting in the battle
@@ -85,38 +93,47 @@ contract Battle is Timed, Upgradable {
     event WarriorsAssignedToBattlefield (address indexed _from, address _faction, uint _battlePointsIncrementForecast);
     event WarriorsBackToHome            (address indexed _to, address _faction, uint _survivedWarriors);
 
-    function Battle(uint _startTime, uint _life, uint8 _avarageBlockTime, address _persians, address _immortals, address _spartans, address _athenians) Timed(_startTime, _life, _avarageBlockTime) Upgradable("1.0.0") public {
+    function BattleOfThermopylae(uint _startTime, uint _life, uint8 _avarageBlockTime, address _persians, address _immortals, address _spartans, address _athenians) Timed(_startTime, _life, _avarageBlockTime) Upgradable("1.0.0") public {
         persians = _persians;
         immortals = _immortals;
         spartans = _spartans;
         athenians = _athenians;
     }
 
+    function setBattleTokenAddress(address _battleTokenAddress, address _battleTokenOwner) onlyOwner public {
+        battles = _battleTokenAddress;
+        battlesOwner = _battleTokenOwner;
+    }
+
     /**** PHASE #1 ******/
 
     function assignPersiansToBattle(uint _warriors) onlyIfInTime external returns (bool success) {
         assignWarriorsToBattle(msg.sender, persians, _warriors, MAX_PERSIANS);
+        sendBattleTokens(msg.sender, _warriors.mul(BTL_PERSIAN));
         // Persians are divisible with 18 decimals and their value is 1 BP
         WarriorsAssignedToBattlefield(msg.sender, persians, _warriors / WAD);
         return true;
     }
 
-    function assignSpartansToBattle(uint _warriors) onlyIfInTime external returns (bool success) {
-        assignWarriorsToBattle(msg.sender, spartans, _warriors, MAX_SPARTANS);
-        // Spartans are divisible with 18 decimals and their value is 1.000 BP
-        WarriorsAssignedToBattlefield(msg.sender, spartans, (_warriors / WAD).mul(BP_SPARTAN));
-        return true;
-    }
-
     function assignImmortalsToBattle(uint _warriors) onlyIfInTime external returns (bool success) {
         assignWarriorsToBattle(msg.sender, immortals, _warriors, MAX_IMMORTALS);
+        sendBattleTokens(msg.sender, _warriors.mul(WAD).mul(BTL_IMMORTAL));
         // Immortals are not divisible and their value is 100 BP
         WarriorsAssignedToBattlefield(msg.sender, immortals, _warriors.mul(BP_IMMORTAL));
         return true;
     }
 
+    function assignSpartansToBattle(uint _warriors) onlyIfInTime external returns (bool success) {
+        assignWarriorsToBattle(msg.sender, spartans, _warriors, MAX_SPARTANS);
+        sendBattleTokens(msg.sender, _warriors.mul(BTL_SPARTAN));
+        // Spartans are divisible with 18 decimals and their value is 1.000 BP
+        WarriorsAssignedToBattlefield(msg.sender, spartans, (_warriors / WAD).mul(BP_SPARTAN));
+        return true;
+    }
+
     function assignAtheniansToBattle(uint _warriors) onlyIfInTime external returns (bool success) {
         assignWarriorsToBattle(msg.sender, athenians, _warriors, MAX_ATHENIANS);
+        sendBattleTokens(msg.sender, _warriors.mul(BTL_ATHENIAN));
         // Athenians are divisible with 18 decimals and their value is 100 BP
         WarriorsAssignedToBattlefield(msg.sender, athenians, (_warriors / WAD).mul(BP_ATHENIAN));
         return true;
@@ -159,7 +176,7 @@ contract Battle is Timed, Upgradable {
 
     function assignWarriorsToBattle(address _player, address _faction, uint _warriors, uint _maxWarriors) private {
         require(warriorsOnTheBattlefield[_faction].add(_warriors) <= _maxWarriors);
-        assert(TokenERC20(_faction).transferFrom(_player, address(this), _warriors));
+        require(TokenEIP20(_faction).transferFrom(_player, address(this), _warriors));
         warriorsByPlayer[_player][_faction] = warriorsByPlayer[_player][_faction].add(_warriors);
         warriorsOnTheBattlefield[_faction] = warriorsOnTheBattlefield[_faction].add(_warriors);
     }
@@ -177,7 +194,11 @@ contract Battle is Timed, Upgradable {
     }
 
     function sendWarriors(address _player, address _faction, uint _warriors) private {
-        assert(TokenERC20(_faction).transfer(_player, _warriors));
+        require(TokenEIP20(_faction).transfer(_player, _warriors));
+    }
+
+    function sendBattleTokens(address _player, uint _value) private {
+        require(TokenEIP20(battles).transferFrom(battlesOwner, _player, _value));
     }
 
     /*** CONSTANT FUNCTIONS AND DAPP HELPERS ***/
