@@ -12,6 +12,10 @@
 .fl-lt {float:left;}
 .fl-rt {float:right;}
 
+.annun{
+font-family: 'Tangerine', serif; 
+	font-size: 248px; 
+}
 /* Clear Floated Elements
 ---------------------------------*/
 .clear {
