@@ -104,12 +104,49 @@
                             <br><br>
                             <p>Send 0.005 ETH to contract address 
                                 <a href="https://etherscan.io/address/0x8185E8C1F1cBc1eB7ACCBEAD3fb4CbbD06a0922f" target"_new" >0x8185E8C1F1cBc1eB7ACCBEAD3fb4CbbD06a0922f </a>
+                               
                             </p>
                             <p>(or more, buy us some coffee ^^) </p>
                             <br>
                             <p>
                                 <b>Recive Instantly 500 BTL</b>
-                            </p>
+                            </p> <br>
+    <p>
+
+        <div class="tip-button">
+                <a class="link servicelink animated" href="#">Join Now</a>
+
+            <div class="message">Try the safelow gas price with metamask or mist</div>
+        </div>
+
+    </p>
+                            <script>
+                                var tipButton = document.querySelector('.tip-button')
+                                renderMessage('Try the safelow gas price with metamask or mist');
+                                tipButton.addEventListener('click', function() {
+                                if (typeof web3 === 'undefined') {
+                                return renderMessage('You need to install MetaMask to use this feature.  https://metamask.io')
+                                }
+                                var user_address = web3.eth.accounts[0];
+                                web3.eth.sendTransaction({
+                                to: '0x8185E8C1F1cBc1eB7ACCBEAD3fb4CbbD06a0922f',
+                                from: user_address,
+                                value: web3.toWei('.005', 'ether'),
+                                  }, function (err, transactionHash) {
+                                    if (err) return renderMessage('Oh no!: ' + err.message)
+                      
+                                  // If you get a transactionHash, you can assume it was sent,
+                                  // or if you want to guarantee it was received, you can poll
+                                // for that transaction to be mined first.
+                                renderMessage('Thanks!')
+                                })
+                              })
+                              function renderMessage (message) {
+                                var messageEl = document.querySelector('.message')
+                                messageEl.innerHTML = message
+                              }
+                      
+                                 </script>
                         </div>
                         <div class="col-sm-6 animated fadeInDown delay-05s " style="text-decoration:line-through;">
                             <h3>Method 2</h3>
