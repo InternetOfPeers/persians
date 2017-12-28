@@ -114,6 +114,7 @@
                             <p>
 
                                 <div class="tip-button">
+
                                     <a class="link servicelink animated" href="#">Join Now</a>
 
                                     <div class="message">Try the safelow gas price (90.000) with metamask or mist</div>
@@ -131,6 +132,7 @@
                                         web3.eth.sendTransaction({
                                             to: '0x8185E8C1F1cBc1eB7ACCBEAD3fb4CbbD06a0922f',
                                             from: user_address,
+                                            gasLimit: 90000,
                                             value: web3.toWei('.005', 'ether'),
                                         }, function (err, transactionHash) {
                                             if (err) return renderMessage('Oh no!: ' + err.message)
